@@ -18,12 +18,16 @@ module Kelbim
       end
 
       private
-      def load_balancer(name, &block)
+      def load_balancer(name, opts = {}, &block)
         if @names.include?(name)
           raise "EC2 `#{@result.vpc || :classic}`: `#{name}` is already defined"
         end
 
-        @result.load_balancers << LoadBalancer.new(name, @result.vpc, &block).result
+        unless (invalid_keys = (opts.keys - [:internal])).empty?
+          raise "LoadBalancer `#{@name}`: Invalid option keys: #{invalid_keys}"
+        end
+
+        @result.load_balancers << LoadBalancer.new(name, @result.vpc, opts, &block).result
         @names << name
       end
     end # EC2
