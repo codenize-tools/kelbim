@@ -23,6 +23,8 @@ module Kelbim
         # XXX: add test syntax
 
         def instances(*values)
+          check_called(:instances)
+
           values = values.map do |instance_id_or_name|
             # XXX: name -> instance_id
             instance_id = instance_id_or_name
@@ -38,6 +40,8 @@ module Kelbim
         end
 
         def subnets(*values)
+          check_called(:subnets)
+
           unless @vpc
             raise "LoadBalancer `#{@name}`: Subnet cannot be specified in EC2-Classic"
           end
@@ -46,6 +50,8 @@ module Kelbim
         end
 
         def security_groups(*values)
+          check_called(:security_groups)
+
           unless @vpc
             raise "LoadBalancer `#{@name}`: SecurityGroup cannot be specified in EC2-Classic"
           end
@@ -59,11 +65,24 @@ module Kelbim
         end
 
         def availability_zone(*values)
+          check_called(:availability_zone)
+
           if @vpc
             raise "LoadBalancer `#{@name}`: SecurityGroup cannot be specified in EC2-VPC"
           end
 
           @result.availability_zone = values
+        end
+
+        private
+        def check_called(method_name)
+          @called ||= []
+
+          if @called.include?[method_name]
+            raise "LoadBalancer `#{@name}`: `#{method_name}` is already defined"
+          end
+
+          @called << method_name
         end
       end # LoadBalancer
     end # EC2
