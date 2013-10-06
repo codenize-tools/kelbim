@@ -1,88 +1,75 @@
 require 'ostruct'
-require 'piculet/dsl/permissions'
+require 'kelbim/dsl/checker'
+require 'kelbim/dsl/health-check'
+require 'kelbim/dsl/listeners'
 
 module Kelbim
   class DSL
     class EC2
       class LoadBalancer
-        def initialize(name, vpc, options, &block)
-          @name = name
+        def initialize(name, vpc, internal, &block)
           @vpc = vpc
+          @error_identifier = "LoadBalancer `#{name}`"
 
           @result = OpenStruct.new({
             :name      => name,
             :instances => [],
-            :internal  => options[:internal],
+            :internal  => internal,
           })
         end
 
         def result
+          required(:listeners, @result.listeners)
+          required(:health_check, @result.health_check)
+
+          if @vpc
+            required(:subnets, @result.subnets)
+            required(:security_groups, @result.security_groups)
+          else
+            required(:availability_zone, @result.availability_zone)
+          end
+
           @result
         end
 
-        # XXX: add test syntax
+        # XXX: add `test` method later
 
         def instances(*values)
-          check_called(:instances)
+          call_once(:instances)
 
-          values = values.map do |instance_id_or_name|
-            # XXX: name -> instance_id
+          values.each do |instance_id_or_name|
             instance_id = instance_id_or_name
-
-            if @result.instances.include?(instance_id)
-              raise "LoadBalancer `#{@name}`: `#{instance_id_or_name}` is already included"
-            end
-
-            instance_id
+            not_include(instance_id_or_name, @result.instances)
+            @result.instances << instance_id
           end
+        end
 
-          @result.instances = values
+        def listeners
+          call_once(:listeners)
+          @result.listeners = Listeners.new(@name, &block).result
+        end
+
+        def health_check
+          call_once(:health_check)
+          @result.health_check = HealthCheck.new(@name, &block).result
         end
 
         def subnets(*values)
-          check_called(:subnets)
-
-          unless @vpc
-            raise "LoadBalancer `#{@name}`: Subnet cannot be specified in EC2-Classic"
-          end
-
+          call_once(:subnets)
+          raise "#{@error_identifier}: Subnet cannot be specified in EC2-Classic" unless @vpc
           @result.subnets = values
         end
 
         def security_groups(*values)
-          check_called(:security_groups)
-
-          unless @vpc
-            raise "LoadBalancer `#{@name}`: SecurityGroup cannot be specified in EC2-Classic"
-          end
-
-          values = values.map do |security_group_id_or_name|
-            # XXX: name -> id
-            security_group_id_or_name
-          end
-
+          call_once(:security_groups)
+          raise "#{@error_identifier}: SecurityGroup cannot be specified in EC2-Classic" unless @vpc
           @result.security_groups = values
         end
 
         def availability_zone(*values)
-          check_called(:availability_zone)
-
-          if @vpc
-            raise "LoadBalancer `#{@name}`: SecurityGroup cannot be specified in EC2-VPC"
-          end
-
+          call_once(:availability_zone)
+          raise "#{@error_identifier}: SecurityGroup cannot be specified in EC2-VPC" if @vpc
           @result.availability_zone = values
-        end
-
-        private
-        def check_called(method_name)
-          @called ||= []
-
-          if @called.include?[method_name]
-            raise "LoadBalancer `#{@name}`: `#{method_name}` is already defined"
-          end
-
-          @called << method_name
         end
       end # LoadBalancer
     end # EC2
