@@ -8,7 +8,9 @@ module Kelbim
       attr_reader :result
 
       def initialize(vpc, &block)
-        @names = Set.new
+        @names = []
+        @error_identifier = "EC2 `#{@result.vpc || :classic}`"
+
         @result = OpenStruct.new({
           :vpc            => vpc,
           :load_balancers => [],
@@ -20,14 +22,14 @@ module Kelbim
       private
       def load_balancer(name, opts = {}, &block)
         if @names.include?(name)
-          raise "EC2 `#{@result.vpc || :classic}`: `#{name}` is already defined"
+          raise "#{@error_identifier}: `#{name}` is already defined"
         end
 
         unless (invalid_keys = (opts.keys - [:internal])).empty?
-          raise "LoadBalancer `#{@name}`: Invalid option keys: #{invalid_keys}"
+          raise "LoadBalancer `#{name}`: Invalid option keys: #{invalid_keys}"
         end
 
-        @result.load_balancers << LoadBalancer.new(name, @result.vpc, opts, &block).result
+        @result.load_balancers << LoadBalancer.new(name, @result.vpc, opts[:internal], &block).result
         @names << name
       end
     end # EC2
