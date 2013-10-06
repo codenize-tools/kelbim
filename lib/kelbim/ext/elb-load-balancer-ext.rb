@@ -10,6 +10,6 @@ module AWS
           lb[:load_balancer_name] == name
         end
       end
-    end
-  end
-end
+    end # LoadBalancer
+  end # ELB
+end # AWS

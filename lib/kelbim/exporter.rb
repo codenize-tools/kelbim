@@ -1,4 +1,5 @@
 require 'kelbim/ext/elb-load-balancer-ext'
+require 'kelbim/ext/elb-listener-ext'
 
 module Kelbim
   class Exporter
@@ -27,7 +28,7 @@ module Kelbim
     def export_load_balancer(load_balancer)
       attrs = {
         :instances    => load_balancer.instances.map {|i| i.tags['Name'] || i.id },
-        :listeners    => export_listeners(load_balancer.listeners),
+        :listeners    => load_balancer.listeners.map {|i| export_listener(i) },
         :health_check => load_balancer.health_check,
         :scheme       => load_balancer.scheme,
         :dns_name     => load_balancer.dns_name,
@@ -43,9 +44,23 @@ module Kelbim
       return attrs
     end
 
-    def export_listeners(listeners)
-      # XXX:
-      listeners
+    def export_listener(listener)
+      {
+        :protocol           => listener.protocol,
+        :port               => listener.port,
+        :instance_protocol  => listener.instance_protocol,
+        :instance_port      => listener.instance_port,
+        :server_certificate => listener.server_certificate,
+        :policies           => listener.policies.map {|i| export_policy(i) },
+      }
+    end
+
+    def export_policy(policy)
+      {
+        :name       => policy.name,
+        :type       => policy.type,
+        :attributes => policy.attributes
+      }
     end
   end # Exporter
 end # Kelbim
