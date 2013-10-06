@@ -7,7 +7,10 @@ module Kelbim
   class DSL
     class EC2
       class LoadBalancer
+        include Checker
+
         def initialize(name, vpc, internal, &block)
+          @name = name
           @vpc = vpc
           @error_identifier = "LoadBalancer `#{name}`"
 
@@ -16,6 +19,8 @@ module Kelbim
             :instances => [],
             :internal  => internal,
           })
+
+          instance_eval(&block)
         end
 
         def result
@@ -44,12 +49,12 @@ module Kelbim
           end
         end
 
-        def listeners
+        def listeners(&block)
           call_once(:listeners)
           @result.listeners = Listeners.new(@name, &block).result
         end
 
-        def health_check
+        def health_check(&block)
           call_once(:health_check)
           @result.health_check = HealthCheck.new(@name, &block).result
         end

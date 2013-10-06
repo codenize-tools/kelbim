@@ -6,6 +6,8 @@ module Kelbim
     class EC2
       class LoadBalancer
         class HealthCheck
+          include Checker
+
           def initialize(load_balancer, &block)
             @error_identifier = "LoadBalancer `#{load_balancer}`"
             @result = {}
@@ -22,31 +24,31 @@ module Kelbim
 
           def target(value)
             call_once(:target)
-            @result.target = value
+            @result[:target] = value
           end
 
           def timeout(value)
             call_once(:timeout)
             expected_type(value, Integer)
-            @result.timeout = value
+            @result[:timeout] = value
           end
 
           def interval(value)
             call_once(:interval)
             expected_type(value, Integer)
-            @result.interval = value
+            @result[:interval] = value
           end
 
           def healthy_threshold(value)
             call_once(:healthy_threshold)
             expected_type(value, Integer)
-            @result.healthy_threshold = value
+            @result[:healthy_threshold] = value
           end
 
           def unhealthy_threshold(value)
             call_once(:unhealthy_threshold)
             expected_type(value, Integer)
-            @result.unhealthy_threshold = value
+            @result[:unhealthy_threshold] = value
           end
         end # HealthCheck
       end # LoadBalancer

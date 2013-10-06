@@ -7,7 +7,7 @@ module Kelbim
 
         if value
           case value
-          when Strin
+          when String
             invalid = value.strip.empty?
           when Array, Hash
             invalid = value.empty?
@@ -46,7 +46,7 @@ module Kelbim
       def call_once(method_name)
         @called ||= []
 
-        if @called.include?[method_name]
+        if @called.include?(method_name)
           raise __identify("`#{method_name}` is already defined")
         end
 

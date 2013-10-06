@@ -9,7 +9,7 @@ module Kelbim
 
       def initialize(vpc, &block)
         @names = []
-        @error_identifier = "EC2 `#{@result.vpc || :classic}`"
+        @error_identifier = "EC2 `#{vpc || :classic}`"
 
         @result = OpenStruct.new({
           :vpc            => vpc,

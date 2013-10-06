@@ -9,7 +9,7 @@ module Kelbim
         class Listeners
           include Checker
 
-          def initialize(load_balancer)
+          def initialize(load_balancer, &block)
             @error_identifier = "LoadBalancer `#{load_balancer}`"
             @result = {}
             instance_eval(&block)
@@ -22,7 +22,7 @@ module Kelbim
               protocol, port, instance_port, instance_protocol = protocol_ports.first.flatten
 
               OpenStruct.new({
-                :protocol          => lb_protocol,
+                :protocol          => protocol,
                 :port              => port,
                 :instance_protocol => instance_protocol,
                 :instance_port     => instance_port,
@@ -37,12 +37,15 @@ module Kelbim
             expected_type(protocol_ports, Hash)
             expected_length(protocol_ports, 1)
 
-            protocol_ports.each do |protocol, port|
+            protocol_ports.first.each do |protocol_port|
+              protocol, port = protocol_port
+              expected_type(protocol_port, Array)
+              expected_length(protocol_port, 2)
               expected_value(protocol, :http, :tcp)
               expected_type(port, Integer)
             end
 
-            @result[key] = Listener.new(@load_balancer, protocol_ports, &block).result
+            @result[protocol_ports] = Listener.new(@load_balancer, protocol_ports, &block).result
           end
         end # Listeners
       end # LoadBalancer
