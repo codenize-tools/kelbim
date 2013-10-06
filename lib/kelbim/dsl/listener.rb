@@ -11,7 +11,6 @@ module Kelbim
             include Checker
 
             def initialize(load_balancer, protocol_prots, &block)
-              @protocol_prots = protocol_prots
               @error_identifier = "LoadBalancer `#{load_balancer}`: #{protocol_prots}"
 
               @result = OpenStruct.new({
