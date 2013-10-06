@@ -6,7 +6,7 @@ module Kelbim
     class EC2
       class LoadBalancer
         class HealthCheck
-          def initialize(load_balancer, protocol_prots, &block)
+          def initialize(load_balancer, &block)
             @error_identifier = "LoadBalancer `#{load_balancer}`"
             @result = {}
             instance_eval(&block)
