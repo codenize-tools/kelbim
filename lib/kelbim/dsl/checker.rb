@@ -31,6 +31,12 @@ module Kelbim
         end
       end
 
+      def expected_value(value, *list)
+        unless list.any? {|i| value == i }
+          raise __identify("Invalid value: #{value}")
+        end
+      end
+
       def call_once(method_name)
         @called ||= []
 
