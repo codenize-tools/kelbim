@@ -21,7 +21,13 @@ module Kelbim
 
       def expected_type(value, *types)
         unless types.any? {|t| value.kind_of?(t) }
-          raise __identify("Invalid type: #{t}")
+          raise __identify("Invalid type: #{value}")
+        end
+      end
+
+      def expected_length(value, length)
+        if value.length != length
+          raise __identify("Invalid length: #{value}")
         end
       end
 
