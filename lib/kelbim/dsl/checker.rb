@@ -37,6 +37,12 @@ module Kelbim
         end
       end
 
+      def not_include(value, list)
+        if list.include?(value)
+          raise __identify("`#{value}` is already included")
+        end
+      end
+
       def call_once(method_name)
         @called ||= []
 
