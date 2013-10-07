@@ -27,7 +27,7 @@ module Kelbim
     private
     def export_load_balancer(load_balancer)
       attrs = {
-        :instances    => load_balancer.instances.map {|i| i.tags['Name'] || i.id },
+        :instances    => load_balancer.instances.map {|i| i.id },
         :listeners    => load_balancer.listeners.map {|i| export_listener(i) },
         :health_check => load_balancer.health_check,
         :scheme       => load_balancer.scheme,

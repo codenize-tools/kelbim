@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'kelbim/dsl/converter'
 require 'kelbim/dsl/ec2'
 
 module Kelbim
@@ -8,6 +9,10 @@ module Kelbim
         self.new(path) do
           eval(source, binding)
         end
+      end
+
+      def convert(exported, instance_names)
+        Converter.convert(exported, instance_names)
       end
     end # of class methods
 
