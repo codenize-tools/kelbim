@@ -36,11 +36,14 @@ end
         name = name.inspect
         internal = (load_balancer[:scheme] == 'internal') ? ', :internal => true ' : ' '
         instances = output_instances(load_balancer[:instances]).strip
+        listeners = output_listeners(load_balancer[:listeners]).strip
         health_check = output_health_check(load_balancer[:health_check]).strip
 
         <<-EOS
   load_balancer #{name}#{internal}do
     #{instances}
+
+    #{listeners}
 
     #{health_check}
   end
@@ -60,6 +63,30 @@ end
     instances(
       #{instances}
     )
+        EOS
+      end
+
+      def output_listeners(listeners)
+        items = listeners.map {|listener|
+          output_listener(listener).strip
+        }.join("\n      ")
+
+        <<-EOS
+    listeners do
+      #{items}
+    end
+        EOS
+      end
+
+      def output_listener(listener)
+        protocol = listener[:protocol].inspect
+        port = listener[:port]
+        instance_protocol = listener[:instance_protocol].inspect
+        instance_port = listener[:instance_port]
+
+        <<-EOS
+      listener [#{protocol}, #{port}] => [#{instance_protocol}, #{instance_port}] do
+      end
         EOS
       end
 
