@@ -36,10 +36,13 @@ end
         name = name.inspect
         internal = (load_balancer[:scheme] == 'internal') ? ', :internal => true ' : ' '
         instances = output_instances(load_balancer[:instances]).strip
+        health_check = output_health_check(load_balancer[:health_check]).strip
 
         <<-EOS
   load_balancer #{name}#{internal}do
     #{instances}
+
+    #{health_check}
   end
         EOS
       end
@@ -57,6 +60,24 @@ end
     instances(
       #{instances}
     )
+        EOS
+      end
+
+      def output_health_check(health_check)
+        target = health_check[:target].inspect
+        timeout = health_check[:timeout]
+        interval = health_check[:interval]
+        healthy_threshold = health_check[:healthy_threshold]
+        unhealthy_threshold = health_check[:unhealthy_threshold]
+
+        <<-EOS
+    health_check do
+      target #{target}
+      timeout #{timeout}
+      interval #{interval}
+      healthy_threshold #{healthy_threshold}
+      unhealthy_threshold #{unhealthy_threshold}
+    end
         EOS
       end
     end # Converter
