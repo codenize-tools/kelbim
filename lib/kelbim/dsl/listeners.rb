@@ -37,6 +37,8 @@ module Kelbim
             expected_type(protocol_ports, Hash)
             expected_length(protocol_ports, 1)
 
+            block = proc {} unless block
+
             protocol_ports.first.each do |protocol_port|
               protocol, port = protocol_port
               expected_type(protocol_port, Array)

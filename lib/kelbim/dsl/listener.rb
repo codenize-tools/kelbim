@@ -48,7 +48,7 @@ module Kelbim
               class_eval(<<-EOS, __FILE__, __LINE__ + 1)
                 def #{attr_name}(name_or_attrs)
                   call_once(#{attr_name.inspect})
-                  expected_type(name_or_attrs, String, Hash)
+                  expected_type(name_or_attrs, String, Hash, Array)
                   @result.policies << [#{attr_name.inspect}, name_or_attrs]
                 end
               EOS

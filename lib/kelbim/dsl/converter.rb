@@ -1,3 +1,5 @@
+require 'kelbim/policy-types'
+
 module Kelbim
   class DSL
     class Converter
@@ -52,7 +54,7 @@ end
 
       def output_instances(instances)
         if instances.empty?
-          instances = '# any instances...'
+          instances = '# no instances...'
         else
           instances = instances.map {|instance_id|
             @instance_names.fetch(instance_id, instance_id).inspect
@@ -83,11 +85,32 @@ end
         port = listener[:port]
         instance_protocol = listener[:instance_protocol].inspect
         instance_port = listener[:instance_port]
+        policies = listener[:policies]
+        server_certificate = listener[:server_certificate]
 
-        <<-EOS
-      listener [#{protocol}, #{port}] => [#{instance_protocol}, #{instance_port}] do
-      end
-        EOS
+        out = "listener [#{protocol}, #{port}] => [#{instance_protocol}, #{instance_port}]"
+
+        if policies.empty? and server_certificate.nil?
+          return out
+        end
+
+        out << " do\n"
+
+        unless policies.empty?
+          policies_dsl = policies.map {|policy|
+            Kelbim::PolicyTypes.convert_to_dsl(policy)
+          }.join("\n        ")
+
+          out << "        #{policies_dsl}\n"
+        end
+
+        if server_certificate
+          out << "        server_certificate #{server_certificate.name}\n"
+        end
+
+        out << "      end"
+
+        return out
       end
 
       def output_health_check(health_check)
