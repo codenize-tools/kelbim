@@ -1,5 +1,7 @@
 require 'kelbim/policy-types'
 
+# XXX: internal, subnets, zone
+
 module Kelbim
   class DSL
     class Converter
