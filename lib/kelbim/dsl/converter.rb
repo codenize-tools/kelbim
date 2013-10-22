@@ -24,39 +24,54 @@ module Kelbim
 
       private
       def output_ec2(vpc, load_balancers)
-        vpc = vpc ? vpc.inspect + ' ' : ''
+        arg_vpc = vpc ? vpc.inspect + ' ' : ''
         load_balancers = load_balancers.map {|name, load_balancer|
-          output_load_balancer(name, load_balancer)
+          output_load_balancer(vpc, name, load_balancer)
         }.join("\n").strip
 
         <<-EOS
-ec2 #{vpc}do
+ec2 #{arg_vpc}do
   #{load_balancers}
 end
         EOS
       end
 
-      def output_load_balancer(name, load_balancer)
+      def output_load_balancer(vpc, name, load_balancer)
         name = name.inspect
         internal = (load_balancer[:scheme] == 'internal') ? ', :internal => true ' : ' '
         instances = output_instances(load_balancer[:instances]).strip
         listeners = output_listeners(load_balancer[:listeners]).strip
         health_check = output_health_check(load_balancer[:health_check]).strip
 
-        <<-EOS
+        out = <<-EOS
   load_balancer #{name}#{internal}do
     #{instances}
 
     #{listeners}
 
     #{health_check}
-  end
         EOS
+
+        if vpc
+          subnets = load_balancer[:subnets]
+          subnets = subnets.map {|i| i.inspect }.join("\n,      ")
+
+          out << "\n"
+          out.concat(<<-EOS)
+    subnets(
+      #{subnets}
+    )
+          EOS
+        else
+        end
+
+        out << "  end\n"
+        return out
       end
 
       def output_instances(instances)
         if instances.empty?
-          instances = '# no instances...'
+          instances = '# not registered'
         else
           instances = instances.map {|instance_id|
             @instance_names.fetch(instance_id, instance_id).inspect
