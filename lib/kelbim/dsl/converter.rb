@@ -73,6 +73,15 @@ end
     )
           EOS
         else
+          availability_zones = load_balancer[:availability_zones]
+          availability_zones = availability_zones.map {|i| i.inspect }.join("\n,      ")
+
+          out << "\n"
+          out.concat(<<-EOS)
+    availability_zones(
+      #{availability_zones}
+    )
+          EOS
         end
 
         out << "  end\n"
