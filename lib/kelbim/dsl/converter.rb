@@ -54,7 +54,7 @@ end
 
         if vpc
           subnets = load_balancer[:subnets]
-          subnets = subnets.map {|i| i.inspect }.join("\n,      ")
+          subnets = subnets.map {|i| i.inspect }.join(",\n      ")
 
           out << "\n"
           out.concat(<<-EOS)
@@ -64,7 +64,7 @@ end
           EOS
 
           security_groups = load_balancer[:security_groups]
-          security_groups = security_groups.map {|i| i.inspect }.join("\n,      ")
+          security_groups = security_groups.map {|i| i.inspect }.join(",\n      ")
 
           out << "\n"
           out.concat(<<-EOS)
@@ -74,7 +74,7 @@ end
           EOS
         else
           availability_zones = load_balancer[:availability_zones]
-          availability_zones = availability_zones.map {|i| i.inspect }.join("\n,      ")
+          availability_zones = availability_zones.map {|i| i.inspect }.join(",\n      ")
 
           out << "\n"
           out.concat(<<-EOS)
@@ -141,7 +141,7 @@ end
         end
 
         if server_certificate
-          out << "        server_certificate #{server_certificate.name}\n"
+          out << "        server_certificate #{server_certificate.name.inspect}\n"
         end
 
         out << "      end"

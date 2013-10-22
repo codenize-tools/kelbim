@@ -31,7 +31,7 @@ module Kelbim
             required(:subnets, @result.subnets)
             required(:security_groups, @result.security_groups)
           else
-            required(:availability_zone, @result.availability_zone)
+            required(:availability_zones, @result.availability_zones)
           end
 
           @result
@@ -71,10 +71,10 @@ module Kelbim
           @result.security_groups = values
         end
 
-        def availability_zone(*values)
+        def availability_zones(*values)
           call_once(:availability_zone)
           raise "#{@error_identifier}: SecurityGroup cannot be specified in EC2-VPC" if @vpc
-          @result.availability_zone = values
+          @result.availability_zones = values
         end
       end # LoadBalancer
     end # EC2

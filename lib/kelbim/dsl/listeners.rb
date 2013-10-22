@@ -43,7 +43,7 @@ module Kelbim
               protocol, port = protocol_port
               expected_type(protocol_port, Array)
               expected_length(protocol_port, 2)
-              expected_value(protocol, :http, :tcp)
+              expected_value(protocol, :http, :https, :tcp, :ssl)
               expected_type(port, Integer)
             end
 
