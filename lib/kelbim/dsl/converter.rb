@@ -62,6 +62,16 @@ end
       #{subnets}
     )
           EOS
+
+          security_groups = load_balancer[:security_groups]
+          security_groups = security_groups.map {|i| i.inspect }.join("\n,      ")
+
+          out << "\n"
+          out.concat(<<-EOS)
+    security_groups(
+      #{security_groups}
+    )
+          EOS
         else
         end
 
