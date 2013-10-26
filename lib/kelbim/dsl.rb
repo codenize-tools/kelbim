@@ -16,6 +16,8 @@ module Kelbim
       end
     end # of class methods
 
+    attr_reader :result
+
     def initialize(path, &block)
       @path = path
       @result = OpenStruct.new(:ec2s => {})
