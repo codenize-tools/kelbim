@@ -12,6 +12,7 @@ module Kelbim
     end
 
     def apply(file)
+      AWS.memoize { walk(file) }
     end
 
     def export
