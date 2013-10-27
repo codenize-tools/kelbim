@@ -19,7 +19,7 @@ module Kelbim
             required(:listener, @result)
 
             @result.map do |protocol_ports, listener|
-              protocol, port, instance_port, instance_protocol = protocol_ports.first.flatten
+              protocol, port, instance_protocol, instance_port = protocol_ports.first.flatten
 
               OpenStruct.new({
                 :protocol          => protocol,
