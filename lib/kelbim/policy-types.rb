@@ -5,8 +5,8 @@ module Kelbim
       :app_cookie_stickiness         => 'AppCookieStickinessPolicyType',
       :lb_cookie_stickiness          => 'LBCookieStickinessPolicyType',
       :proxy_protocol                => 'ProxyProtocolPolicyType',
-      #:backend_server_authentication => 'BackendServerAuthenticationPolicyType',
-      #:public_key                    => 'PublicKeyPolicyType',
+      :backend_server_authentication => 'BackendServerAuthenticationPolicyType',
+      :public_key                    => 'PublicKeyPolicyType',
     }
 
     EXPANDERS = {
@@ -59,6 +59,19 @@ module Kelbim
         end
 
         "#{sym} #{args}"
+      end
+
+      def name?(name_or_attrs)
+        name_or_attrs.kind_of?(String)
+      end
+
+      def expand(sym_or_str, policy_attrs)
+        if sym_or_str.kind_of?(String)
+          sym_or_str = string_to_symbol(sym_or_str)
+        end
+
+        expander = EXPANDERS[sym_or_str]
+        expander ? expander.call(policy_attrs) : policy_attrs
       end
     end # of class methods
   end # PolicyTypes
