@@ -37,7 +37,7 @@ end
       def output_load_balancer(vpc, name, load_balancer)
         name = name.inspect
         internal = (load_balancer[:scheme] == 'internal') ? ', :internal => true ' : ' '
-        instances = output_instances(load_balancer[:instances]).strip
+        instances = output_instances(load_balancer[:instances], vpc).strip
         listeners = output_listeners(load_balancer[:listeners]).strip
         health_check = output_health_check(load_balancer[:health_check]).strip
 
@@ -86,12 +86,14 @@ end
         return out
       end
 
-      def output_instances(instances)
+      def output_instances(instances, vpc)
         if instances.empty?
           instances = '# not registered'
         else
+          instance_id_names = @instance_names[vpc] || {}
+
           instances = instances.map {|instance_id|
-            @instance_names.fetch(instance_id, instance_id).inspect
+            instance_id_names.fetch(instance_id, instance_id).inspect
           }.join(",\n      ")
         end
 
