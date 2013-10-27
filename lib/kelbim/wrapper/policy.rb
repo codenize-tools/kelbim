@@ -17,9 +17,9 @@ module Kelbim
                   :@policy,
                   :type)
 
-                def initialize(policy, policy_collection, options)
+                def initialize(policy, listener, options)
                   @policy = policy
-                  @policy_collection = policy_collection
+                  @listener = listener
                   @options = options
                 end
 
