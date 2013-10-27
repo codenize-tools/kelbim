@@ -8,7 +8,11 @@ module AWS
       end
 
       def policies
-        policy_names.map do |name|
+        if AWS.memoizing? and @policy_list
+          return @policy_list
+        end
+
+        @policy_list = policy_names.map do |name|
           load_balancer.policies.find {|i| i.name == name }
         end
       end
