@@ -22,12 +22,12 @@ module Kelbim
               protocol, port, instance_protocol, instance_port = protocol_ports.first.flatten
 
               OpenStruct.new({
-                :protocol          => protocol,
-                :port              => port,
-                :instance_protocol => instance_protocol,
-                :instance_port     => instance_port,
-                :ssl_certificate   => listener.ssl_certificate,
-                :policies          => listener.policies,
+                :protocol           => protocol,
+                :port               => port,
+                :instance_protocol  => instance_protocol,
+                :instance_port      => instance_port,
+                :server_certificate => listener.server_certificate,
+                :policies           => listener.policies,
               })
             end
           end
