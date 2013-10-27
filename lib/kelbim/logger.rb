@@ -30,4 +30,4 @@ module Kelbim
       end
     end # ClientHelper
   end # Logger
-end # Piculet
+end # Kelbim
