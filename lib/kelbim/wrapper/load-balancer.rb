@@ -58,7 +58,11 @@ module Kelbim
 
         def delete
           log(:info, 'Delete LoadBalancer', :red, "#{self.vpc_id || :classic} > #{name}")
-          # XXX: @load_balancers.delete
+
+          unless @options.dry_run
+            @load_balancer.delete
+            @options.updated = true
+          end
         end
       end # LoadBalancer
     end # LoadBalancerCollection
