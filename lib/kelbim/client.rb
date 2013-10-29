@@ -15,6 +15,7 @@ module Kelbim
       @options = OpenStruct.new(options)
       @options.elb = AWS::ELB.new
       @options.ec2 = AWS::EC2.new
+      @options.iam = AWS::IAM.new
     end
 
     def apply(file)
@@ -85,11 +86,10 @@ module Kelbim
         name = key[0]
         lb_aws = lb_list_aws[key]
 
-        # XXX:
-        #unless lb_aws
-        #  lb_aws = collection_api.create(lb_dsl, vpc)
-        #  lb_list_aws[key] = lb_aws
-        #end
+        unless lb_aws
+          lb_aws = collection_api.create(lb_dsl, vpc)
+          lb_list_aws[key] = lb_aws
+        end
       end
 
       lb_list_dsl.each do |key, lb_dsl|

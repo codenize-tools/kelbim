@@ -30,8 +30,9 @@ module Kelbim
             subnet_ids.sort == dsl.subnets.sort or return false
 
             aws_sg_ids = @load_balancer.security_group_ids.sort
+            sg_names = @options.security_group_names[self.vpc_id] || {}
+
             dsl_sg_ids = dsl.security_groups.map {|i|
-              sg_names = @options.security_group_names[self.vpc_id] || {}
               sg_names.key(i) || i
             }.sort
 
@@ -52,12 +53,12 @@ module Kelbim
         end
 
         def update(dsl)
-          log(:info, 'Update LoadBalancer', :red, "#{self.vpc_id || :classic} > #{name}")
+          log(:info, 'Update LoadBalancer', :red, "#{self.vpc_id || :classic} > #{self.name}")
           # XXX:
         end
 
         def delete
-          log(:info, 'Delete LoadBalancer', :red, "#{self.vpc_id || :classic} > #{name}")
+          log(:info, 'Delete LoadBalancer', :red, "#{self.vpc_id || :classic} > #{self.name}")
 
           unless @options.dry_run
             @load_balancer.delete
