@@ -34,11 +34,11 @@ module Kelbim
             :health_check => {}, # health_checkはLoadBalancerの処理で更新
           })
 
-          listeners.each do |lsnr|
-            lsnr.load_balancer = lb
+          listeners.each do |lstnr|
+            lstnr.load_balancer = lb
 
-            if lsnr.server_certificate
-              lsnr.server_certificate = OpenStruct.new(:name => lsnr.server_certificate)
+            if lstnr.server_certificate
+              lstnr.server_certificate = OpenStruct.new(:name => lstnr.server_certificate)
             end
           end
 
@@ -57,25 +57,25 @@ module Kelbim
 
           opts[:instances] = dsl.instances unless dsl.instances.empty?
 
-          dsl.listeners.each do |lsnr|
-            lsnr_opts = {
-              :port              => lsnr.port,
-              :protocol          => lsnr.protocol,
-              :instance_protocol => lsnr.instance_protocol,
-              :instance_port     => lsnr.instance_port,
+          dsl.listeners.each do |lstnr|
+            lstnr_opts = {
+              :port              => lstnr.port,
+              :protocol          => lstnr.protocol,
+              :instance_protocol => lstnr.instance_protocol,
+              :instance_port     => lstnr.instance_port,
             }
 
-            if (ss_name = lsnr.server_certificate)
+            if (ss_name = lstnr.server_certificate)
               ss = @options.iam.server_certificates[ss_name]
 
               unless ss
                 raise "Can't find ServerCertificate: #{ss_name} in #{vpc || :classic} > #{dsl.name}"
               end
 
-              lsnr_opts[:server_certificate] = ss.arn
+              lstnr_opts[:server_certificate] = ss.arn
             end
 
-            opts[:listeners] << lsnr_opts
+            opts[:listeners] << lstnr_opts
           end
 
           if vpc

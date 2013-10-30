@@ -26,7 +26,7 @@ module Kelbim
       exported = nil
       instance_names = nil
 
-      AWS.memoize do 
+      AWS.memoize do
         exported = Exporter.export(@options.elb)
         instance_names = @options.ec2.instance_names
       end
@@ -118,11 +118,10 @@ module Kelbim
       listeners_dsl.each do |key, lstnr_dsl|
         lstnr_aws = listeners_aws[key]
 
-        # XXX:
-        #unless lstnr_aws
-        #  lstnr_aws = collection_api.create(lstnr_dsl)
+        unless lstnr_aws
+          lstnr_aws = collection_api.create(lstnr_dsl)
         #  listeners_aws[key] = lstnr_aws
-        #end
+        end
       end
 
       listeners_dsl.each do |key, lstnr_dsl|

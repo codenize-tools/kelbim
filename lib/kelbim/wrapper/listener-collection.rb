@@ -1,6 +1,7 @@
+require 'ostruct'
 require 'kelbim/wrapper/listener'
 require 'kelbim/logger'
-  
+
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection
@@ -21,7 +22,25 @@ module Kelbim
           end
 
           def create(dsl)
-            # XXX:
+            # XXX: logging
+            #log(:info, 'Create Listener', :cyan, "#{vpc || :classic} > #{dsl.name}")
+
+            #if @options.dry_run
+              lstnr = OpenStruct.new({
+                :protocol          => dsl.protocol,
+                :port              => dsl.port,
+                :instance_protocol => dsl.instance_protocol,
+                :instance_port     => dsl.instance_port,
+              })
+
+              if lstnr.server_certificate
+                lstnr.server_certificate = OpenStruct.new(:name => lstnr.server_certificate)
+              end
+            #else
+            #end
+
+
+            Listener.new(lstnr, @options)
           end
         end # ListenerCollection
       end # LoadBalancer
