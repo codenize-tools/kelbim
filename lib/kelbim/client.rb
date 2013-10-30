@@ -120,8 +120,8 @@ module Kelbim
 
         unless lstnr_aws
           lstnr_aws = collection_api.create(lstnr_dsl)
-        #  listeners_aws[key] = lstnr_aws
-        end
+          listeners_aws[key] = lstnr_aws
+          end
       end
 
       listeners_dsl.each do |key, lstnr_dsl|
@@ -130,7 +130,7 @@ module Kelbim
       end
 
       listeners_aws.each do |key, lstnr_aws|
-        lb_aws.delete
+        lstnr_aws.delete
       end
     end
 
@@ -153,11 +153,10 @@ module Kelbim
       policies_dsl.each do |key, plcy_dsl|
         plcy_aws = policies_aws[key]
 
-        # XXX:
-        #unless plcy_dsl
-        #  plcy_aws = collection_api.create(name, plcy_dsl)
-        #  policies_aws[key] = plcy_aws
-        #end
+        unless plcy_aws
+          plcy_aws = collection_api.create(plcy_dsl)
+          policies_aws[key] = plcy_aws
+        end
       end
 
       policies_dsl.each do |key, plcy_dsl|

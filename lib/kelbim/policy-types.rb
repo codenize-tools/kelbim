@@ -20,6 +20,18 @@ module Kelbim
       :proxy_protocol => proc {|attrs| attrs },
     }
 
+    UNEXPANDERS = {
+      :ssl_negotiation => proc {|attrs|
+        unexpanded = {}
+
+        attrs.each do |name|
+          unexpanded[name] = ['true']
+        end
+
+        unexpanded
+      },
+    }
+
     class << self
       def symbol_to_string(sym)
         str = POLICIES[sym]
@@ -72,6 +84,15 @@ module Kelbim
 
         expander = EXPANDERS[sym_or_str]
         expander ? expander.call(policy_attrs) : policy_attrs
+      end
+
+      def unexpand(sym_or_str, expanded_attrs)
+        if sym_or_str.kind_of?(String)
+          sym_or_str = string_to_symbol(sym_or_str)
+        end
+
+        unexpander = UNEXPANDERS[sym_or_str]
+        unexpander ? unexpander.call(expanded_attrs) : expanded_attrs
       end
     end # of class methods
   end # PolicyTypes

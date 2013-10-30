@@ -26,17 +26,39 @@ module Kelbim
             end
 
             def eql?(dsl)
-              aws_server_certificate = @listener.server_certificate
-              aws_server_certificate = aws_server_certificate.name if aws_server_certificate
-              aws_server_certificate == dsl.server_certificate
+              compare_server_certificate(dsl)
             end
 
             def update(dsl)
-              # XXX:
+              compare_server_certificate(dsl) do
+                # XXX: logging
+                unless @options.dry_run
+                  ss = @options.iam.server_certificates[dsl.server_certificate]
+
+                  unless ss
+                    raise "Can't find ServerCertificate: #{ss_name} in #{load_balancer.vpc_id || :classic} > #{@load_balancer.name}"
+                  end
+
+                  @listener.server_certificate = ss
+                end
+              end
             end
 
             def delete
               # XXX: ポリシーも削除（オプションで制御）
+              # XXX: logging
+              unless @options.dry_run
+                @listener.delete
+              end
+            end
+
+            private
+            def compare_server_certificate(dsl)
+              aws_server_certificate = @listener.server_certificate
+              aws_server_certificate = aws_server_certificate.name if aws_server_certificate
+              same = (aws_server_certificate == dsl.server_certificate)
+              yield if !same && block_given?
+              return same
             end
           end # Listener
         end # ListenerCollection
