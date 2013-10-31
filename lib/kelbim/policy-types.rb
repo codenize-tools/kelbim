@@ -4,9 +4,9 @@ module Kelbim
       :ssl_negotiation               => 'SSLNegotiationPolicyType',
       :app_cookie_stickiness         => 'AppCookieStickinessPolicyType',
       :lb_cookie_stickiness          => 'LBCookieStickinessPolicyType',
-      :proxy_protocol                => 'ProxyProtocolPolicyType',
-      :backend_server_authentication => 'BackendServerAuthenticationPolicyType',
-      :public_key                    => 'PublicKeyPolicyType',
+      #:proxy_protocol                => 'ProxyProtocolPolicyType',
+      #:backend_server_authentication => 'BackendServerAuthenticationPolicyType',
+      #:public_key                    => 'PublicKeyPolicyType',
     }
 
     EXPANDERS = {
@@ -15,9 +15,8 @@ module Kelbim
           value[0] =~ /\Atrue\Z/i
         }.map {|n, v| n }
       },
-      :app_cookie_stickiness => proc {|attrs| attrs },
-      :lb_cookie_stickiness => proc {|attrs| attrs },
-      :proxy_protocol => proc {|attrs| attrs },
+      :app_cookie_stickiness => proc {|attrs| h = {}; attrs.map {|k, v| h[k] = [v].flatten[0] }; h },
+      :lb_cookie_stickiness => proc {|attrs| h = {}; attrs.map {|k, v| h[k] = [v].flatten[0] }; h },
     }
 
     UNEXPANDERS = {
@@ -30,6 +29,8 @@ module Kelbim
 
         unexpanded
       },
+      :app_cookie_stickiness => proc {|attrs| h = {}; attrs.map {|k, v| h[k] = [v].flatten }; h },
+      :lb_cookie_stickiness => proc {|attrs| h = {}; attrs.map {|k, v| h[k] = [v].flatten }; h },
     }
 
     class << self

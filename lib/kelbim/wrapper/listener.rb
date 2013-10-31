@@ -14,7 +14,7 @@ module Kelbim
 
             def_delegators(
               :@listener,
-              :protocol, :port, :instance_protocol, :instance_port)
+              :protocol, :port, :instance_protocol, :instance_port, :load_balancer)
 
             def initialize(listener, options)
               @listener = listener
@@ -36,11 +36,22 @@ module Kelbim
                   ss = @options.iam.server_certificates[dsl.server_certificate]
 
                   unless ss
-                    raise "Can't find ServerCertificate: #{ss_name} in #{load_balancer.vpc_id || :classic} > #{@load_balancer.name}"
+                    raise "Can't find ServerCertificate: #{ss_name} in #{self.load_balancer.vpc_id || :classic} > #{self.load_balancer.name}"
                   end
 
                   @listener.server_certificate = ss
                 end
+              end
+            end
+
+            def policies=(policy_list)
+              # XXX: logging
+              unless @options.dry_run
+                @options.elb.client.set_load_balancer_policies_of_listener({
+                  :load_balancer_name => @listener.load_balancer.name,
+                  :load_balancer_port => @listener.port,
+                  :policy_names       => policy_list.map {|i| i.name },
+                })
               end
             end
 

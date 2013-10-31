@@ -15,7 +15,7 @@ module Kelbim
 
                 def_delegators(
                   :@policy,
-                  :type)
+                  :name, :type)
 
                 def initialize(policy, listener, options)
                   @policy = policy
@@ -34,12 +34,11 @@ module Kelbim
                   end
                 end
 
-                def update(dsl)
-                  # XXX:
-                end
-
                 def delete
-                  # XXX:
+                  # XXX: logging
+                  unless @options.dry_run
+                    @policy.delete
+                  end
                 end
               end # Policy
             end # PolicyCollection

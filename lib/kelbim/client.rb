@@ -146,32 +146,43 @@ module Kelbim
       policies = listener_aws.policies
       plcy_list_aws = collect_to_hash(policies, :type)
 
-      walk_policies(plcy_list_dsl, plcy_list_aws, policies)
+      walk_policies(listener_aws, plcy_list_dsl, plcy_list_aws, policies)
     end
 
-    def walk_policies(policies_dsl, policies_aws, collection_api)
-      policies_dsl.each do |key, plcy_dsl|
-        plcy_aws = policies_aws[key]
+    def walk_policies(listener, policies_dsl, policies_aws, collection_api)
+      orig_policy_names = policies_aws.map {|k, v| v.name }
+      new_policies = []
+      old_policies = []
 
-        unless plcy_aws
-          plcy_aws = collection_api.create(plcy_dsl)
-          policies_aws[key] = plcy_aws
+      policies_dsl.each do |key, plcy_dsl|
+        unless policies_aws[key]
+          new_policies << collection_api.create(plcy_dsl)
         end
       end
 
       policies_dsl.each do |key, plcy_dsl|
         plcy_aws = policies_aws.delete(key)
-        walk_policy(plcy_dsl, plcy_aws)
+        next unless plcy_aws
+
+        if plcy_aws.eql?(plcy_dsl)
+          new_policies << plcy_aws
+        else
+          new_policies << collection_api.create(plcy_dsl)
+          old_policies << plcy_aws
+        end
       end
 
       policies_aws.each do |key, plcy_aws|
-        lb_aws.delete
+        old_policies << plcy_aws
       end
-    end
 
-    def walk_policy(policy_dsl, policy_aws)
-      unless policy_aws.eql?(policy_dsl)
-        policy_aws.update(policy_aws)
+      if not new_policies.empty? and orig_policy_names.sort != new_policies.map {|i| i.name }.sort
+        listener.policies = new_policies
+
+        # XXX: 古いポリシーの削除をオプションで制御する
+        old_policies.each do |plcy_aws|
+          plcy_aws.delete
+        end
       end
     end
 
