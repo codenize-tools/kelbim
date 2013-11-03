@@ -22,6 +22,10 @@ module Kelbim
       AWS.memoize { walk(file) }
     end
 
+    def test(file)
+      # XXX:
+    end
+
     def export
       exported = nil
       instance_names = nil
@@ -184,9 +188,10 @@ module Kelbim
       if not new_policies.empty? and orig_policy_names.sort != new_policies.map {|i| i.name }.sort
         listener.policies = new_policies
 
-        # XXX: 古いポリシーの削除をオプションで制御する
-        old_policies.each do |plcy_aws|
-          plcy_aws.delete
+        unless @options.without_deleting_policy
+          old_policies.each do |plcy_aws|
+            plcy_aws.delete
+          end
         end
       end
     end
