@@ -73,7 +73,7 @@ ec2 "vpc-XXXXXXXXX" do
 
     listeners do
       listener [:tcp, 80] => [:tcp, 80]
-      listener [:ssl, 443] => [:tcp, 80] do
+      listener [:https, 443] => [:http, 80] do
         app_cookie_stickiness "CookieName"=>"20"
         ssl_negotiation ["Protocol-TLSv1", "Protocol-SSLv3", "AES256-SHA", ...]
         server_certificate "my-cert"
