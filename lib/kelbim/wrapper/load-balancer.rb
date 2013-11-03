@@ -23,6 +23,10 @@ module Kelbim
         end
 
         def eql?(dsl)
+          compare_scheme(dsl) do
+            log(:warn, "`scheme`('internet-facing' or 'internal') cannot be updated", :yellow, "#{vpc_id || :classic} > #{name}")
+          end
+
           compare_health_check(dsl) or return false
 
           if self.vpc_id
@@ -65,7 +69,7 @@ module Kelbim
           end
 
           compare_health_check(dsl) do
-              log(:info, '  set health_check=' + dsl.health_check.inspect, :green)
+            log(:info, '  set health_check=' + dsl.health_check.inspect, :green)
 
             unless @options.dry_run
               @load_balancer.configure_health_check(dsl.health_check)
@@ -162,6 +166,12 @@ module Kelbim
         end
 
         private
+        def compare_scheme(dsl)
+          same = (@load_balancer.scheme == dsl.scheme)
+          yield if !same && block_given?
+          return same
+        end
+
         def compare_health_check(dsl)
           same = (@load_balancer.health_check.sort == dsl.health_check.sort)
           yield if !same && block_given?

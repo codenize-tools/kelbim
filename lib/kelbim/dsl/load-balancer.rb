@@ -18,6 +18,7 @@ module Kelbim
             :name      => name,
             :instances => [],
             :internal  => internal,
+            :scheme    => internal ? 'internal' : 'internet-facing',
           })
 
           instance_eval(&block)

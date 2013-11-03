@@ -33,6 +33,7 @@ module Kelbim
                 :instance_protocol => dsl.instance_protocol,
                 :instance_port     => dsl.instance_port,
                 :policies          => dsl.policies.map {|i| PolicyCollection.create_mock_policy(i) },
+                :scheme            => dsl.scheme,
               })
 
               if dsl.server_certificate
@@ -44,6 +45,7 @@ module Kelbim
                 :port              => dsl.port,
                 :instance_protocol => dsl.instance_protocol,
                 :instance_port     => dsl.instance_port,
+                :scheme            => dsl.scheme,
               }
 
               if (ss_name = dsl.server_certificate)
