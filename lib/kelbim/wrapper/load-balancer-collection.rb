@@ -86,7 +86,7 @@ module Kelbim
               AWS::EC2::SecurityGroup.new(sg_names.key(i) || i)
             end
           else
-            opts[:availability_zones] = dsl.availability_zones.map {|i|  AWS::EC2::SecurityGroup.new(:i) }
+            opts[:availability_zones] = dsl.availability_zones.map {|i|  AWS::EC2::AvailabilityZone.new(i) }
           end
 
           # health_checkはLoadBalancerの処理で更新

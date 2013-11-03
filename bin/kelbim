@@ -1,0 +1,138 @@
+#!/usr/bin/env ruby
+$: << File.expand_path("#{File.dirname __FILE__}/../lib")
+require 'rubygems'
+require 'kelbim'
+require 'optparse'
+
+DEFAULT_FILENAME = 'ELBfile'
+
+mode = nil
+file = DEFAULT_FILENAME
+output_file = '-'
+split = false
+
+options = {
+  :dry_run     => false,
+  :color       => true,
+  :debug       => false,
+}
+
+ARGV.options do |opt|
+  begin
+    access_key = nil
+    secret_key = nil
+    region = nil
+
+    opt.on('-k', '--access-key ACCESS_KEY') {|v| access_key                   = v       }
+    opt.on('-s', '--secret-key SECRET_KEY') {|v| secret_key                   = v       }
+    opt.on('-r', '--region REGION')         {|v| region                       = v       }
+    opt.on('-a', '--apply')                 {|v| mode                         = :apply  }
+    opt.on('-f', '--file FILE')             {|v| file                         = v       }
+    opt.on('',   '--dry-run')               {|v| options[:dry_run]            = true    }
+    opt.on('-e', '--export')                {|v| mode                         = :export }
+    opt.on('-o', '--output FILE')           {|v| output_file                  = v       }
+    opt.on('',   '--split')                 {|v| split                        = true    }
+    opt.on('-t', '--test')                  {|v| mode                         = :test   }
+    opt.on(''  , '--no-color')              {    options[:color]              = false   }
+    opt.on(''  , '--debug')                 {    options[:debug]              = true    }
+    opt.parse!
+
+    if access_key and secret_key
+      aws_opts = {
+        :access_key_id     => access_key,
+        :secret_access_key => secret_key,
+      }
+      aws_opts[:region] = region if region
+      AWS.config(aws_opts)
+    elsif (access_key and !secret_key) or (!access_key and secret_key) or mode.nil?
+      puts opt.help
+      exit 1
+    end
+  rescue => e
+    $stderr.puts("[ERROR] #{e.message}")
+    exit 1
+  end
+end
+
+String.colorize = options[:color]
+
+if options[:debug]
+  AWS.config({
+    :http_wire_trace => true,
+    :logger => Kelbim::Logger.instance,
+  })
+end
+
+begin
+  logger = Kelbim::Logger.instance
+  logger.set_debug(options[:debug])
+  client = Kelbim::Client.new(options)
+
+  case mode
+  when :export
+    if split
+      logger.info('Export ELB')
+
+      output_file = DEFAULT_FILENAME if output_file == '-'
+      requires = []
+
+      client.export do |exported, converter|
+        exported.each do |vpc, elbs|
+          elb_file = File.join(File.dirname(output_file), "#{vpc || :classic}.elb")
+          requires << elb_file
+
+          logger.info("  write `#{elb_file}`")
+
+          open(elb_file, 'wb') do |f|
+            f.puts converter.call(vpc => elbs)
+          end
+        end
+      end
+
+      logger.info("  write `#{output_file}`")
+
+      open(output_file, 'wb') do |f|
+        requires.each do |elb_file|
+          f.puts "require '#{File.basename elb_file}'"
+        end
+      end
+    else
+      if output_file == '-'
+        logger.info('# Export ELB')
+        puts client.export
+      else
+        logger.info("Export ELB to `#{output_file}`")
+        open(output_file, 'wb') {|f| f.puts client.export }
+      end
+    end
+  when :apply
+    unless File.exist?(file)
+      raise "No ELBfile found (looking for: #{file})"
+    end
+
+    msg = "Apply `#{file}` to ELB"
+    msg << ' (dry-run)' if options[:dry_run]
+    logger.info(msg)
+
+    updated = client.apply(file)
+
+    logger.info('No change'.intense_blue) unless updated
+  when :test
+    unless File.exist?(file)
+      raise "No ELBfile found (looking for: #{file})"
+    end
+
+    logger.info("Test `#{file}`")
+    # XXX:
+    client.test(file)
+  else
+    raise 'must not happen'
+  end
+rescue => e
+  if options[:debug]
+    raise e
+  else
+    $stderr.puts("[ERROR] #{e.message}".red)
+    exit 1
+  end
+end
