@@ -23,5 +23,5 @@ module AWS
 
       return vpc_sg_id_names
     end
-  end
+  end # EC2
 end # AWS
