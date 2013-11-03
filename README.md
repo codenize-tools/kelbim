@@ -100,5 +100,32 @@ ec2 "vpc-XXXXXXXXX" do
 end
 ```
 
+## Test
+
+```ruby
+ec2 "vpc-XXXXXXXXX" do
+  load_balancer "my-load-balancer" do
+    test do
+      host = "my-load-balancer-XXXXXXXXXX.ap-northeast-1.elb.amazonaws.com"
+
+      expect {
+        timeout(3) do
+          socket = TCPSocket.open(host, 8080)
+          socket.close if socket
+        end
+      }.not_to raise_error
+    end
+    ...
+```
+
+```sh
+shell> kelbim -t
+Test `ELBfile`
+...
+
+Finished in 3.16 seconds
+3 examples, 0 failures
+```
+
 ## Link
 * [RubyGems.org site](http://rubygems.org/gems/kelbim)
