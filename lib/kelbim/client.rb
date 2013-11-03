@@ -55,7 +55,7 @@ module Kelbim
       exported = nil
 
       AWS.memoize do
-        exported = Exporter.export(@options.elb)
+        exported = Exporter.export(@options.elb, :fetch_policies => true)
       end
 
       retval = {}

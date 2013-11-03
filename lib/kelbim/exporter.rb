@@ -4,13 +4,14 @@ require 'kelbim/ext/elb-listener-ext'
 module Kelbim
   class Exporter
     class << self
-      def export(elb)
-        self.new(elb).export
+      def export(elb, options = {})
+        self.new(elb, options).export
       end
     end # of class methods
 
-    def initialize(elb)
+    def initialize(elb, options = {})
       @elb = elb
+      @fetch_policies = options[:fetch_policies]
     end
 
     def export
@@ -34,7 +35,7 @@ module Kelbim
         :dns_name     => load_balancer.dns_name,
       }
 
-      if load_balancer.policies.first
+      if @fetch_policies and load_balancer.policies.first
         attrs[:policies] = h = {}
         load_balancer.policies.each {|i| h[i.name] = i.type }
       end
