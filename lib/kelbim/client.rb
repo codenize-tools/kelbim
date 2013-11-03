@@ -51,6 +51,29 @@ module Kelbim
       return retval
     end
 
+    def policies
+      exported = nil
+
+      AWS.memoize do
+        exported = Exporter.export(@options.elb)
+      end
+
+      retval = {}
+
+      exported.map do |vpc, lbs|
+        vpc = vpc || 'classic'
+
+        lbs.map do |name, attrs|
+          if attrs[:policies]
+            retval[vpc] ||= {}
+            retval[vpc][name] = attrs[:policies]
+          end
+        end
+      end
+
+      return retval
+    end
+
     def export
       exported = nil
       instance_names = nil

@@ -34,6 +34,11 @@ module Kelbim
         :dns_name     => load_balancer.dns_name,
       }
 
+      if load_balancer.policies.first
+        attrs[:policies] = h = {}
+        load_balancer.policies.each {|i| h[i.name] = i.type }
+      end
+
       if load_balancer.vpc_id
         attrs[:subnets] = load_balancer.subnets.map {|i| i.id }
         attrs[:security_groups] = load_balancer.security_groups.map {|i| i.name }

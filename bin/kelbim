@@ -37,6 +37,7 @@ ARGV.options do |opt|
     opt.on('',   '--split')                   {|v| split                             = true                 }
     opt.on('-t', '--test')                    {|v| mode                              = :test                }
     opt.on('',   '--show-load-balancers')     {|v| mode                              = :show_load_balancers }
+    opt.on('',   '--show-policies')           {|v| mode                              = :show_policies       }
     opt.on(''  , '--no-color')                {    options[:color]                   = false                }
     opt.on(''  , '--debug')                   {    options[:debug]                   = true                 }
     opt.parse!
@@ -131,6 +132,8 @@ begin
     client.test(file)
   when :show_load_balancers
     puts JSON.pretty_generate(client.load_balancers)
+  when :show_policies
+    puts JSON.pretty_generate(client.policies)
   else
     raise 'must not happen'
   end
