@@ -70,7 +70,7 @@ module Kelbim
             lstnr = nil
 
             if @options.dry_run
-              lstnr = self.class.create_mock_listener(dsl)
+              lstnr = self.class.create_mock_listener(dsl, @load_balancer)
             else
               lstnr_opts = self.class.create_listener_options(dsl, @options.iam)
 
