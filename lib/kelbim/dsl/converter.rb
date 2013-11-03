@@ -36,19 +36,16 @@ end
 
       def output_load_balancer(vpc, name, load_balancer)
         name = name.inspect
-        internal = (load_balancer[:scheme] == 'internal') ? ', :internal => true ' : ' '
+        is_internal = (load_balancer[:scheme] == 'internal')
+        internal = is_internal ? ', :internal => true ' : ' '
         instances = output_instances(load_balancer[:instances], vpc).strip
         listeners = output_listeners(load_balancer[:listeners]).strip
         health_check = output_health_check(load_balancer[:health_check]).strip
-        dns_name = load_balancer[:dns_name]
+        testcase = (is_internal and not load_balancer.fetch(:listeners, []).empty?) ? '' : ("\n    " + output_testcase(load_balancer).strip + "\n")
 
         out = <<-EOS
-  load_balancer #{name}#{internal}do
-    #test do
-    #  #host = #{dns_name.inspect}
-    #  #expect(Net::HTTP.start(host, 80).get("/")).to be_a(Net::HTTPOK)
-    #end
-
+  load_balancer #{name}#{internal}do#{
+    testcase}
     #{instances}
 
     #{listeners}
@@ -89,6 +86,34 @@ end
         end
 
         out << "  end\n"
+        return out
+      end
+
+      def output_testcase(load_balancer)
+        dns_name = load_balancer[:dns_name]
+        ports = load_balancer[:listeners].map {|i| i[:port] }
+
+        out = <<-EOS
+    test do
+      host = #{dns_name.inspect}
+        EOS
+
+        ports.each do |port|
+          out.concat(<<-EOS)
+
+      expect {
+        timeout(3) do
+          socket = TCPSocket.open(host, #{port})
+          socket.close if socket
+        end
+      }.not_to raise_error
+          EOS
+        end
+
+        out.concat(<<-EOS)
+    end
+        EOS
+
         return out
       end
 

@@ -3,6 +3,7 @@ $: << File.expand_path("#{File.dirname __FILE__}/../lib")
 require 'rubygems'
 require 'kelbim'
 require 'optparse'
+require 'rspec'
 
 DEFAULT_FILENAME = 'ELBfile'
 
@@ -123,7 +124,7 @@ begin
     end
 
     logger.info("Test `#{file}`")
-    # XXX:
+    RSpec.configuration.color_enabled = options[:color]
     client.test(file)
   else
     raise 'must not happen'

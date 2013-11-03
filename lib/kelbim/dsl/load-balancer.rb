@@ -39,7 +39,7 @@ module Kelbim
         end
 
         def test(&block)
-          call_once(:instances)
+          call_once(:test)
           @result.test = block
         end
 

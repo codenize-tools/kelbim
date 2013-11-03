@@ -4,6 +4,7 @@ require 'kelbim/exporter'
 require 'kelbim/ext/ec2-ext'
 require 'kelbim/ext/elb-load-balancer-ext'
 require 'kelbim/policy-types'
+require 'kelbim/tester'
 require 'kelbim/wrapper/elb-wrapper'
 require 'kelbim/logger'
 
@@ -23,7 +24,10 @@ module Kelbim
     end
 
     def test(file)
-      # XXX:
+      AWS.memoize do
+        dsl = load_file(file)
+        Tester.test(dsl)
+      end
     end
 
     def export
