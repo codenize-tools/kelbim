@@ -64,6 +64,7 @@ ec2 do
   end
 end
 
+# EC2 VPC
 ec2 "vpc-XXXXXXXXX" do
   load_balancer "my-load-balancer", :internal => true do
     instances(
