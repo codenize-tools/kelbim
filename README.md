@@ -4,7 +4,7 @@ Kelbim is a tool to manage ELB.
 
 It defines the state of ELB using DSL, and updates ELB according to DSL.
 
-**Attention! This is the alpha version**
+**Attention! This is the alpha version!**
 
 ## Installation
 
