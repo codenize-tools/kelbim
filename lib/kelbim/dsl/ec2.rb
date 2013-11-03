@@ -7,13 +7,13 @@ module Kelbim
     class EC2
       attr_reader :result
 
-      def initialize(vpc, &block)
+      def initialize(vpc, load_balancers, &block)
         @names = []
         @error_identifier = "EC2 `#{vpc || :classic}`"
 
         @result = OpenStruct.new({
           :vpc            => vpc,
-          :load_balancers => [],
+          :load_balancers => load_balancers,
         })
 
         instance_eval(&block)

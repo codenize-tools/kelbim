@@ -38,7 +38,11 @@ module Kelbim
     end
 
     def ec2(vpc = nil, &block)
-      @result.ec2s[vpc] = EC2.new(vpc, &block).result
+      if (ec2_result = @result.ec2s[vpc])
+        @result.ec2s[vpc] = EC2.new(vpc, ec2_result.load_balancers, &block).result
+      else
+        @result.ec2s[vpc] = EC2.new(vpc, [], &block).result
+      end
     end
   end # DSL
 end # Kelbim
