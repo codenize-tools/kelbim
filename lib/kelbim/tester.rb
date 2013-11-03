@@ -24,9 +24,9 @@ module Kelbim
         vpc ||= 'classic'
 
         ec2.load_balancers.each do |lb|
-          if lb.test
+          if lb.spec
             RSpec.describe("#{vpc || :classic} > #{lb.name}") {
-              it(&lb.test)
+              it(&lb.spec)
             }
           end
         end

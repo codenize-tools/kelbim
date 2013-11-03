@@ -94,7 +94,7 @@ end
         ports = load_balancer[:listeners].map {|i| i[:port] }
 
         out = <<-EOS
-    test do
+    spec do
       host = #{dns_name.inspect}
         EOS
 

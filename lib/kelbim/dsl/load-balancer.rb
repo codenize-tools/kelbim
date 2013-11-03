@@ -38,9 +38,9 @@ module Kelbim
           @result
         end
 
-        def test(&block)
-          call_once(:test)
-          @result.test = block
+        def spec(&block)
+          call_once(:spec)
+          @result.spec = block
         end
 
         def instances(*values)
