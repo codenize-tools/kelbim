@@ -40,9 +40,15 @@ end
         instances = output_instances(load_balancer[:instances], vpc).strip
         listeners = output_listeners(load_balancer[:listeners]).strip
         health_check = output_health_check(load_balancer[:health_check]).strip
+        dns_name = load_balancer[:dns_name]
 
         out = <<-EOS
   load_balancer #{name}#{internal}do
+    #test do
+    #  #host = #{dns_name.inspect}
+    #  #expect(Net::HTTP.start(host, 80).get("/")).to be_a(Net::HTTPOK)
+    #end
+
     #{instances}
 
     #{listeners}
