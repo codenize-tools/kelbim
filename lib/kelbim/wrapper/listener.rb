@@ -49,7 +49,7 @@ module Kelbim
             end
 
             def policies=(policy_list)
-              log(:info, 'Update Policies', :green, log_id)
+              log(:info, 'Update Listener Policies', :green, log_id)
               log(:info, '  set policies=' + policy_list.map {|i| i.name }.join(', '), :green)
 
               unless @options.dry_run
@@ -89,6 +89,11 @@ module Kelbim
               )
             end
 
+            def log_id
+              log_id = [[@listener.protocol, @listener.port], [@listener.instance_protocol, @listener.instance_port]].map {|i| i.inspect }.join(' => ')
+              "#{@listener.load_balancer.vpc_id || :classic} > #{@listener.load_balancer.name} > #{log_id}"
+            end
+
             private
             def compare_server_certificate(dsl)
               aws_server_certificate = @listener.server_certificate
@@ -96,11 +101,6 @@ module Kelbim
               same = (aws_server_certificate == dsl.server_certificate)
               yield if !same && block_given?
               return same
-            end
-
-            def log_id
-              log_id = [[@listener.protocol, @listener.port], [@listener.instance_protocol, @listener.instance_port]].map {|i| i.inspect }.join(' => ')
-              "#{@listener.load_balancer.vpc_id || :classic} > #{@listener.load_balancer.name} > #{log_id}"
             end
           end # Listener
         end # ListenerCollection

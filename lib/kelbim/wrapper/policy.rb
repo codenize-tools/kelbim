@@ -26,18 +26,20 @@ module Kelbim
                 def eql?(dsl)
                   dsl_type, dsl_name_or_attrs = dsl
 
-                  if Kelbim::PolicyTypes.name?(dsl_name_or_attrs)
+                  if PolicyTypes.name?(dsl_name_or_attrs)
                     @policy.name == dsl_name_or_attrs
                   else
-                    aws_attrs = Kelbim::PolicyTypes.expand(@policy.type, @policy.attributes)
+                    aws_attrs = PolicyTypes.expand(@policy.type, @policy.attributes)
                     aws_attrs.sort == dsl_name_or_attrs.sort
                   end
                 end
 
                 def delete
-                  # XXX: logging
+                  log(:info, 'Delete Policy', :red, "#{@listener.log_id} > #{self.name}")
+
                   unless @options.dry_run
                     @policy.delete
+                    @options.updated = true
                   end
                 end
               end # Policy

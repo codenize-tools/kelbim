@@ -145,7 +145,7 @@ module Kelbim
       end
 
       plcy_list_dsl = collect_to_hash(listener_dsl.policies) do |policy_type, name_or_attrs|
-        [Kelbim::PolicyTypes.symbol_to_string(policy_type)]
+        [PolicyTypes.symbol_to_string(policy_type)]
       end
 
       policies = listener_aws.policies

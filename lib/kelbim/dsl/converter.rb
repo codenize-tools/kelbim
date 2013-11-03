@@ -140,7 +140,7 @@ end
 
         unless policies.empty?
           policies_dsl = policies.map {|policy|
-            Kelbim::PolicyTypes.convert_to_dsl(policy)
+            PolicyTypes.convert_to_dsl(policy)
           }.join("\n        ")
 
           out << "        #{policies_dsl}\n"
