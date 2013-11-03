@@ -105,7 +105,7 @@ end
 ```ruby
 ec2 "vpc-XXXXXXXXX" do
   load_balancer "my-load-balancer" do
-    test do
+    spec do
       host = "my-load-balancer-XXXXXXXXXX.ap-northeast-1.elb.amazonaws.com"
 
       expect {
