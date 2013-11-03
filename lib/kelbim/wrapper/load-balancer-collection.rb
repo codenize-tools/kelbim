@@ -25,7 +25,7 @@ module Kelbim
           listeners = dsl.listeners
 
           lb = OpenStruct.new({
-            :id           => '<new load balancer>',
+            :id           => "<new load balancer name=#{dsl.name}>",
             :name         => dsl.name,
             :vpc_id       => vpc,
             :instances    => dsl.instances,

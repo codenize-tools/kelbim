@@ -26,41 +26,67 @@ module Kelbim
             end
 
             def eql?(dsl)
-              compare_server_certificate(dsl)
+              not has_difference_protocol_port?(dsl) and compare_server_certificate(dsl)
             end
 
             def update(dsl)
+              log(:info, 'Update Listener', :green, log_id)
+
               compare_server_certificate(dsl) do
-                # XXX: logging
+                log(:info, "  set server_certificate=#{dsl.server_certificate}", :green)
+
                 unless @options.dry_run
                   ss = @options.iam.server_certificates[dsl.server_certificate]
 
                   unless ss
-                    raise "Can't find ServerCertificate: #{ss_name} in #{self.load_balancer.vpc_id || :classic} > #{self.load_balancer.name}"
+                    raise "Can't find ServerCertificate: #{ss_name} in #{log_id}"
                   end
 
                   @listener.server_certificate = ss
+                  @options.updated = true
                 end
               end
             end
 
             def policies=(policy_list)
-              # XXX: logging
+              log(:info, 'Update Policies', :green, log_id)
+              log(:info, '  set policies=' + policy_list.map {|i| i.name }.join(', '), :green)
+
               unless @options.dry_run
                 @options.elb.client.set_load_balancer_policies_of_listener({
                   :load_balancer_name => @listener.load_balancer.name,
                   :load_balancer_port => @listener.port,
                   :policy_names       => policy_list.map {|i| i.name },
                 })
+
+                @options.updated = true
               end
             end
 
             def delete
-              # XXX: ポリシーも削除（オプションで制御）
-              # XXX: logging
+              log(:info, 'Delete Listener', :red, log_id)
+
+              related_policies = self.policies
+
               unless @options.dry_run
                 @listener.delete
+                @options.updated = true
               end
+
+              unless @options.without_deleting_policy
+                related_policies.each do |plcy|
+                  plcy.delete
+                end
+              end
+            end
+
+            def has_difference_protocol_port?(dsl)
+              not (
+                @listener.protocol          == dsl.protocol          &&
+                @listener.port              == dsl.port              &&
+                @listener.instance_protocol == dsl.instance_protocol &&
+                @listener.instance_port     == dsl.instance_port
+              )
             end
 
             private
@@ -70,6 +96,11 @@ module Kelbim
               same = (aws_server_certificate == dsl.server_certificate)
               yield if !same && block_given?
               return same
+            end
+
+            def log_id
+              log_id = [[@listener.protocol, @listener.port], [@listener.instance_protocol, @listener.instance_port]].map {|i| i.inspect }.join(' => ')
+              "#{@listener.load_balancer.vpc_id || :classic} > #{@listener.load_balancer.name} > #{log_id}"
             end
           end # Listener
         end # ListenerCollection

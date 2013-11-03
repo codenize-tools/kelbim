@@ -36,7 +36,7 @@ module Kelbim
         end
 
         def update(dsl)
-          log(:info, 'Update LoadBalancer', :red, "#{self.vpc_id || :classic} > #{self.name}")
+          log(:info, 'Update LoadBalancer', :green, log_id)
 
           compare_instances(dsl) do |aws_instance_ids, dsl_instance_ids|
             instance_names = @options.instance_names[self.vpc_id] || {}
@@ -44,26 +44,32 @@ module Kelbim
             add_ids = (dsl_instance_ids - aws_instance_ids)
 
             unless add_ids.empty?
-              # XXX: logging with name
+              log(:info, '  register instances=' + add_ids.map {|i| instance_names.fetch(i, i) }.join(', '), :green)
+
               unless @options.dry_run
                 @load_balancer.instances.register(*add_ids)
+                @options.updated = true
               end
             end
 
             del_ids = (aws_instance_ids - dsl_instance_ids)
 
-            unless add_ids.empty?
-              # XXX: logging with name
+            unless del_ids.empty?
+              log(:info, '  deregister instances=' + del_ids.map {|i| instance_names.fetch(i, i) }.join(', '), :green)
+
               unless @options.dry_run
                 @load_balancer.instances.deregister(*del_ids)
+                @options.updated = true
               end
             end
           end
 
           compare_health_check(dsl) do
-            # XXX: logging
+              log(:info, '  set health_check=' + dsl.health_check.inspect, :green)
+
             unless @options.dry_run
               @load_balancer.configure_health_check(dsl.health_check)
+              @options.updated = true
             end
           end
 
@@ -72,37 +78,45 @@ module Kelbim
               add_ids = (dsl_subnet_ids - aws_subnet_ids)
 
               unless add_ids.empty?
-                # XXX: logging
+                log(:info, '  attach subnets=' + add_ids.join(', '), :green)
+
                 unless @options.dry_run
                   @options.elb.client.attach_load_balancer_to_subnets(
                     :load_balancer_name => @load_balancer.name,
                     :subnets => add_ids,
                   )
+
+                  @options.updated = true
                 end
               end
 
               del_ids = (aws_subnet_ids - dsl_subnet_ids)
 
-              unless add_ids.empty?
-                # XXX: logging
+              unless del_ids.empty?
+                log(:info, '  detach subnets=' + del_ids.join(', '), :green)
+
                 unless @options.dry_run
-                  @options.elb.client.attach_load_balancer_to_subnets(
+                  @options.elb.client.detach_load_balancer_from_subnets(
                     :load_balancer_name => @load_balancer.name,
-                    :subnets => add_ids,
+                    :subnets => del_ids,
                   )
+
+                  @options.updated = true
                 end
               end
             end
 
             compare_security_groups(dsl) do |dsl_sg_ids|
               sg_names = @options.security_group_names[self.vpc_id] || {}
+              log(:info, '  apply security groups=' + dsl_sg_ids.map {|i| sg_names.fetch(i, i) }.join(', '), :green)
 
-              # XXX: logging with name
               unless @options.dry_run
                 @options.elb.client.apply_security_groups_to_load_balancer(
                   :load_balancer_name => @load_balancer.name,
                   :security_groups => dsl_sg_ids,
                 )
+
+                @options.updated = true
               end
             end
           else
@@ -110,22 +124,28 @@ module Kelbim
               add_names = (dsl_az_names - aws_az_names)
 
               unless add_names.empty?
-                # XXX: logging
+                log(:info, '  enable availability zones=' + add_names.join(', '), :green)
+
                 unless @options.dry_run
                   add_names.each do |az_name|
                     @load_balancer.availability_zones.enable(az_name)
                   end
+
+                  @options.updated = true
                 end
               end
 
               del_names = (aws_az_names - dsl_az_names)
 
               unless del_names.empty?
-                # XXX: logging
+                log(:info, '  disable availability zones=' + del_names.join(', '), :green)
+
                 unless @options.dry_run
                   del_names.each do |az_name|
                     @load_balancer.availability_zones.disable(az_name)
                   end
+
+                  @options.updated = true
                 end
               end
             end
@@ -133,7 +153,7 @@ module Kelbim
         end
 
         def delete
-          log(:info, 'Delete LoadBalancer', :red, "#{self.vpc_id || :classic} > #{self.name}")
+          log(:info, 'Delete LoadBalancer', :red, log_id)
 
           unless @options.dry_run
             @load_balancer.delete
@@ -186,6 +206,10 @@ module Kelbim
           same = (aws_instance_ids == dsl_instance_ids)
           yield(aws_instance_ids, dsl_instance_ids) if !same && block_given?
           return same
+        end
+
+        def log_id
+          "#{self.vpc_id || :classic} > #{self.name}"
         end
       end # LoadBalancer
     end # LoadBalancerCollection

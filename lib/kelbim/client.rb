@@ -107,9 +107,9 @@ module Kelbim
         load_balancer_aws.update(load_balancer_dsl)
       end
 
-      lstnr_list_dsl = collect_to_hash(load_balancer_dsl.listeners, :protocol, :port, :instance_protocol, :instance_port)
+      lstnr_list_dsl = collect_to_hash(load_balancer_dsl.listeners, :port)
       listeners = load_balancer_aws.listeners
-      lstnr_list_aws = collect_to_hash(listeners, :protocol, :port, :instance_protocol, :instance_port)
+      lstnr_list_aws = collect_to_hash(listeners, :port)
 
       walk_listeners(lstnr_list_dsl, lstnr_list_aws, listeners)
     end
@@ -121,12 +121,12 @@ module Kelbim
         unless lstnr_aws
           lstnr_aws = collection_api.create(lstnr_dsl)
           listeners_aws[key] = lstnr_aws
-          end
+        end
       end
 
       listeners_dsl.each do |key, lstnr_dsl|
         lstnr_aws = listeners_aws.delete(key)
-        walk_listener(lstnr_dsl, lstnr_aws)
+        walk_listener(lstnr_dsl, lstnr_aws, collection_api)
       end
 
       listeners_aws.each do |key, lstnr_aws|
@@ -134,9 +134,14 @@ module Kelbim
       end
     end
 
-    def walk_listener(listener_dsl, listener_aws)
+    def walk_listener(listener_dsl, listener_aws, collection_api)
       unless listener_aws.eql?(listener_dsl)
-        listener_aws.update(listener_dsl)
+        if listener_aws.has_difference_protocol_port?(listener_dsl)
+          listener_aws.delete
+          listener_aws = collection_api.create(listener_dsl)
+        else
+          listener_aws.update(listener_dsl)
+        end
       end
 
       plcy_list_dsl = collect_to_hash(listener_dsl.policies) do |policy_type, name_or_attrs|
