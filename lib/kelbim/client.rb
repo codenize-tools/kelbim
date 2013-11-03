@@ -30,6 +30,27 @@ module Kelbim
       end
     end
 
+    def load_balancers
+      exported = nil
+
+      AWS.memoize do
+        exported = Exporter.export(@options.elb)
+      end
+
+      retval = {}
+
+      exported.map do |vpc, lbs|
+        vpc = vpc || 'classic'
+        retval[vpc] = {}
+
+        lbs.map do |name, attrs|
+          retval[vpc][name] = attrs[:dns_name]
+        end
+      end
+
+      return retval
+    end
+
     def export
       exported = nil
       instance_names = nil
