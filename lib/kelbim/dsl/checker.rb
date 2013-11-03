@@ -16,7 +16,7 @@ module Kelbim
           invalid = true
         end
 
-        raise __identify("`#{name}` is required:") if invalid
+        raise __identify("`#{name}` is required") if invalid
       end
 
       def expected_type(value, *types)

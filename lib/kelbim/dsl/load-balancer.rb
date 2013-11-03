@@ -37,7 +37,10 @@ module Kelbim
           @result
         end
 
-        # XXX: add `test` method later
+        def test(&block)
+          call_once(:instances)
+          @result.test = block
+        end
 
         def instances(*values)
           call_once(:instances)
