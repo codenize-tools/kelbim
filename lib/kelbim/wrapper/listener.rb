@@ -33,7 +33,7 @@ module Kelbim
               log(:info, 'Update Listener', :green, log_id)
 
               compare_server_certificate(dsl) do
-                log(:info, "  set server_certificate=#{dsl.server_certificate}", :green)
+                log(:info, "  set server_certificate=#{dsl.server_certificate ? dsl.server_certificate.name : nil.inspect}", :green)
 
                 unless @options.dry_run
                   ss = @options.iam.server_certificates[dsl.server_certificate]

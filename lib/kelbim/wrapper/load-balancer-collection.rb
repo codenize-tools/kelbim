@@ -1,5 +1,6 @@
 require 'ostruct'
 require 'kelbim/wrapper/load-balancer'
+require 'kelbim/wrapper/listener-collection'
 require 'kelbim/logger'
 
 module Kelbim
@@ -29,18 +30,10 @@ module Kelbim
             :name         => dsl.name,
             :vpc_id       => vpc,
             :instances    => dsl.instances,
-            :scheme       => (dsl.internal ? 'internal' : 'internet-facing'),
-            :listeners    => listeners,
+            :scheme       => dsl.scheme,
+            :listeners    => dsl.listeners.map {|i| LoadBalancer::ListenerCollection.create_mock_listener(i, @load_balancer) },
             :health_check => {}, # health_checkはLoadBalancerの処理で更新
           })
-
-          listeners.each do |lstnr|
-            lstnr.load_balancer = lb
-
-            if lstnr.server_certificate
-              lstnr.server_certificate = OpenStruct.new(:name => lstnr.server_certificate)
-            end
-          end
 
           if vpc
             lb.subnets = dsl.subnets.map {|i| OpenStruct.new(:id => i) }
@@ -51,30 +44,14 @@ module Kelbim
           end
         else
           opts = {
-            :scheme       => (dsl.internal ? 'internal' : 'internet-facing'),
-            :listeners    => [],
+            :scheme    => dsl.scheme,
+            :listeners => [],
           }
 
           opts[:instances] = dsl.instances unless dsl.instances.empty?
 
           dsl.listeners.each do |lstnr|
-            lstnr_opts = {
-              :port              => lstnr.port,
-              :protocol          => lstnr.protocol,
-              :instance_protocol => lstnr.instance_protocol,
-              :instance_port     => lstnr.instance_port,
-            }
-
-            if (ss_name = lstnr.server_certificate)
-              ss = @options.iam.server_certificates[ss_name]
-
-              unless ss
-                raise "Can't find ServerCertificate: #{ss_name} in #{vpc || :classic} > #{dsl.name}"
-              end
-
-              lstnr_opts[:server_certificate] = ss.arn
-            end
-
+            lstnr_opts = LoadBalancer::ListenerCollection.create_listener_options(lstnr, @options.iam)
             opts[:listeners] << lstnr_opts
           end
 

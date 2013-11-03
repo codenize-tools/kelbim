@@ -21,7 +21,7 @@ module Kelbim
 
                   if PolicyTypes.name?(dsl_name_or_attrs)
                     plcy.name = dsl_name_or_attrs
-                    plcy.type = {'<new policy attribute name>' => ['<new policy attribute value>']}
+                    plcy.attribute = {'<new policy attribute name>' => ['<new policy attribute value>']}
                   else
                     plcy.name = '<new policy name>'
                     plcy.attributes = PolicyTypes.unexpand(dsl_type, dsl_name_or_attrs)

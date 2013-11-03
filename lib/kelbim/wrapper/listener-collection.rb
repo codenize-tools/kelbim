@@ -1,5 +1,6 @@
 require 'ostruct'
 require 'kelbim/wrapper/listener'
+require 'kelbim/wrapper/policy-collection'
 require 'kelbim/logger'
 
 module Kelbim
@@ -8,6 +9,46 @@ module Kelbim
       class LoadBalancer
         class ListenerCollection
           include Logger::ClientHelper
+
+          class << self
+            def create_mock_listener(dsl, load_balancer)
+              lstnr = OpenStruct.new({
+                :protocol          => dsl.protocol,
+                :port              => dsl.port,
+                :instance_protocol => dsl.instance_protocol,
+                :instance_port     => dsl.instance_port,
+                :policies          => dsl.policies.map {|i| Listener::PolicyCollection.create_mock_policy(i) },
+                :load_balancer     => load_balancer,
+              })
+
+              if dsl.server_certificate
+                lstnr.server_certificate = OpenStruct.new(:name => dsl.server_certificate)
+              end
+
+              return lstnr
+            end
+
+            def create_listener_options(dsl, iam)
+              lstnr_opts = {
+                :protocol          => dsl.protocol,
+                :port              => dsl.port,
+                :instance_protocol => dsl.instance_protocol,
+                :instance_port     => dsl.instance_port,
+              }
+
+              if (ss_name = dsl.server_certificate)
+                ss = iam.server_certificates[ss_name]
+
+                unless ss
+                  raise "Can't find ServerCertificate: #{ss_name} in #{load_balancer.vpc_id || :classic} > #{@load_balancer.name}"
+                end
+
+                lstnr_opts[:server_certificate] = ss.arn
+              end
+
+              return lstnr_opts
+            end
+          end # of class methods
 
           def initialize(listeners, load_balancer, options)
             @listeners = listeners
@@ -26,37 +67,12 @@ module Kelbim
             log_id = "#{@load_balancer.vpc_id || :classic} > #{@load_balancer.name} > #{log_id}"
             log(:info, 'Create Listener', :cyan, log_id)
 
+            lstnr = nil
+
             if @options.dry_run
-              lstnr = OpenStruct.new({
-                :protocol          => dsl.protocol,
-                :port              => dsl.port,
-                :instance_protocol => dsl.instance_protocol,
-                :instance_port     => dsl.instance_port,
-                :policies          => dsl.policies.map {|i| PolicyCollection.create_mock_policy(i) },
-                :scheme            => dsl.scheme,
-              })
-
-              if dsl.server_certificate
-                lstnr.server_certificate = OpenStruct.new(:name => dsl.server_certificate)
-              end
+              lstnr = self.class.create_mock_listener(dsl)
             else
-              lstnr_opts = {
-                :protocol          => dsl.protocol,
-                :port              => dsl.port,
-                :instance_protocol => dsl.instance_protocol,
-                :instance_port     => dsl.instance_port,
-                :scheme            => dsl.scheme,
-              }
-
-              if (ss_name = dsl.server_certificate)
-                ss = @options.iam.server_certificates[ss_name]
-
-                unless ss
-                  raise "Can't find ServerCertificate: #{ss_name} in #{load_balancer.vpc_id || :classic} > #{@load_balancer.name}"
-                end
-
-                lstnr_opts[:server_certificate] = ss.arn
-              end
+              lstnr_opts = self.class.create_listener_options(dsl, @options.iam)
 
               # lstnr_optsは破壊的に更新される
               lstnr = @listeners.create(lstnr_opts.dup)
