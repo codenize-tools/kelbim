@@ -10,6 +10,7 @@ module RSpec
 
           if exception.message
             line = exception.message.to_s.split("\n").first
+            line.sub!(/\s*with backtrace:\s*/, '')
             output.puts "#{long_padding}#{failure_color(line)}"
           end
         end
