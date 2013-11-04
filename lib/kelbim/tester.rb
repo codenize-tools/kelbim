@@ -2,7 +2,6 @@ require 'rspec'
 require 'net/http'
 require 'socket'
 require 'timeout'
-require 'kelbim/ext/base_text_formatter-ext'
 require 'kelbim/logger'
 
 module Kelbim
@@ -19,6 +18,7 @@ module Kelbim
 
     def test
       require 'rspec/autorun'
+      require 'kelbim/ext/base_text_formatter-ext'
 
       @dsl.ec2s.each do |vpc, ec2|
         vpc ||= 'classic'
