@@ -80,3 +80,15 @@ def export_elb(options = {})
 
   return exported
 end
+
+def with_elb
+  elb = AWS::ELB.new
+  AWS.memoize { yield(elb) }
+end
+
+def get_policy_names(elb, name)
+ lb = elb.load_balancers[name]
+ lb.policies.map {|policy|
+   policy.name.sub!(/\w+-\w+-\w+-\w+-\w+\Z/, 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
+  }.sort
+end
