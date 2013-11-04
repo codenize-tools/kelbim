@@ -51,6 +51,16 @@ def export_elb(options = {})
         /\d+\.us-west-1\.elb\.amazonaws\.com/,
         'NNNNNNNNNN.us-west-1.elb.amazonaws.com')
 
+      attrs[:listeners].each do |listener|
+        if (sc = listener[:server_certificate])
+          listener[:server_certificate] = sc.name
+        end
+
+        listener[:policies].each do |policy|
+          policy[:name].sub!(/\w+-\w+-\w+-\w+-\w+\Z/, 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
+        end
+      end
+
       if vpc
         attrs[:subnets].sort!
         attrs[:security_groups].sort!

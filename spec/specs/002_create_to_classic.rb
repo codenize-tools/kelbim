@@ -2,7 +2,7 @@ ENV['IGNORE_RECURSION'] = '1'
 require File.expand_path("#{File.dirname(__FILE__)}/../kelbim_spec.rb")
 
 describe Kelbim::Client do
-  it "create to classic" do
+  it do
     updated = elbfile { (<<-EOS)
 ec2 do
   load_balancer "my-load-balancer" do

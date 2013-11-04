@@ -2,7 +2,7 @@ ENV['IGNORE_RECURSION'] = '1'
 require File.expand_path("#{File.dirname(__FILE__)}/../kelbim_spec.rb")
 
 describe Kelbim::Client do
-  it "empty" do
+  it do
     updated = elbfile { (<<-EOS)
 ec2 do
 end
