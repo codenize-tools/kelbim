@@ -42,5 +42,21 @@ def export_elb(options = {})
   end
 
   client = Kelbim::Client.new(options)
-  client.export {|e, c| e }
+  exported = client.export {|e, c| e }
+
+  exported.each do |vpc, elbs|
+    elbs.each do |name, attrs|
+      attrs[:instances].sort!
+      attrs[:dns_name].sub!(
+        /\d+\.us-west-1\.elb\.amazonaws\.com/,
+        'NNNNNNNNNN.us-west-1.elb.amazonaws.com')
+
+      if vpc
+      else
+        attrs[:availability_zones].sort!
+      end
+    end
+  end
+
+  return exported
 end
