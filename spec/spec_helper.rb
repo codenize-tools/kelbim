@@ -52,6 +52,8 @@ def export_elb(options = {})
         'NNNNNNNNNN.us-west-1.elb.amazonaws.com')
 
       if vpc
+        attrs[:subnets].sort!
+        attrs[:security_groups].sort!
       else
         attrs[:availability_zones].sort!
       end

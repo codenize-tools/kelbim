@@ -35,6 +35,8 @@ end
   end
 end
 
-Dir.glob("#{File.dirname(__FILE__)}/specs/*.rb").each do |fn|
-  require fn
+unless ENV['IGNORE_RECURSION']
+  Dir.glob("#{File.dirname(__FILE__)}/specs/*.rb").each do |fn|
+    require fn
+  end
 end
