@@ -6,7 +6,6 @@ It defines the state of ELB using DSL, and updates ELB according to DSL.
 
 [![Build Status](https://drone.io/bitbucket.org/winebarrel/kelbim/status.png)](https://drone.io/bitbucket.org/winebarrel/kelbim/latest)
 
-
 **Notice**
 
 It does not yet support the following load balancer policies:
