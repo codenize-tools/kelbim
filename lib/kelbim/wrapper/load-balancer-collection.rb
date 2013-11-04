@@ -29,7 +29,7 @@ module Kelbim
             :id           => "<new load balancer name=#{dsl.name}>",
             :name         => dsl.name,
             :vpc_id       => vpc,
-            :instances    => dsl.instances,
+            :instances    => [], # instancesはLoadBalancerの処理で更新
             :scheme       => dsl.scheme,
             :listeners    => dsl.listeners.map {|i| LoadBalancer::ListenerCollection.create_mock_listener(i, @load_balancer) },
             :health_check => {}, # health_checkはLoadBalancerの処理で更新
@@ -48,7 +48,7 @@ module Kelbim
             :listeners => [],
           }
 
-          opts[:instances] = dsl.instances unless dsl.instances.empty?
+          # instancesはLoadBalancerの処理で更新
 
           dsl.listeners.each do |lstnr|
             lstnr_opts = LoadBalancer::ListenerCollection.create_listener_options(lstnr, @options.iam)
