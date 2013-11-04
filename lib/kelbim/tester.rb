@@ -18,7 +18,6 @@ module Kelbim
 
     def test
       require 'rspec/autorun'
-      require 'kelbim/ext/base_text_formatter-ext'
 
       @dsl.ec2s.each do |vpc, ec2|
         vpc ||= 'classic'

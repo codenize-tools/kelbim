@@ -6,6 +6,7 @@ require 'json'
 require 'kelbim'
 require 'optparse'
 require 'rspec'
+require 'kelbim/rspec_formatter'
 
 DEFAULT_FILENAME = 'ELBfile'
 
@@ -145,8 +146,13 @@ begin
       raise "No ELBfile found (looking for: #{file})"
     end
 
+    RSpec.configure do |config|
+      config.color_enabled = options[:color]
+      config.output_stream = $stdout # formatterをセットする前に設定…
+      config.formatter = Kelbim::RSpecFormatter
+    end
+
     logger.info("Test `#{file}`")
-    RSpec.configuration.color_enabled = options[:color]
     client.test(file)
   when :show_load_balancers
     puts JSON.pretty_generate(client.load_balancers)
