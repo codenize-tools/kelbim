@@ -119,7 +119,7 @@ end
 
       def output_instances(instances, vpc)
         if instances.empty?
-          instances = '# not registered'
+          instances = '# no instances'
         else
           instance_id_names = @instance_names[vpc] || {}
 
