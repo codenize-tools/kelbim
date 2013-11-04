@@ -57,8 +57,16 @@ def export_elb(options = {})
         end
 
         listener[:policies].each do |policy|
-          policy[:name].sub!(/\w+-\w+-\w+-\w+-\w+\Z/, 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
+          policy[:name].sub!(
+            /\w+-\w+-\w+-\w+-\w+\Z/,
+            'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
         end
+
+        listener[:policies] = listener[:policies].sort_by {|i| i[:name] }
+      end
+
+      attrs[:listeners] = attrs[:listeners].sort_by do |listener|
+        listener.values_at(:protocol, :port, :instance_protocol, :instance_port).join
       end
 
       if vpc

@@ -1,5 +1,4 @@
-ENV['IGNORE_RECURSION'] = '1'
-require File.expand_path("#{File.dirname(__FILE__)}/../kelbim_spec.rb")
+require File.expand_path("#{File.dirname __FILE__}/../spec_config")
 
 describe Kelbim::Client do
   it do
@@ -245,13 +244,7 @@ end
   {"my-load-balancer-1"=>
     {:instances=>["i-a89605f3", "i-a99605f2", "i-e15739bb", "i-e65739bc"],
      :listeners=>
-      [{:protocol=>:tcp,
-        :port=>8080,
-        :instance_protocol=>:tcp,
-        :instance_port=>8080,
-        :server_certificate=>nil,
-        :policies=>[]},
-       {:protocol=>:https,
+      [{:protocol=>:https,
         :port=>443,
         :instance_protocol=>:http,
         :instance_port=>80,
@@ -343,7 +336,13 @@ end
              "EXP-ADH-RC4-MD5"=>["false"],
              "EXP-RC4-MD5"=>["false"],
              "EXP-KRB5-RC4-SHA"=>["false"],
-             "EXP-KRB5-RC4-MD5"=>["false"]}}]}],
+             "EXP-KRB5-RC4-MD5"=>["false"]}}]},
+       {:protocol=>:tcp,
+        :port=>8080,
+        :instance_protocol=>:tcp,
+        :instance_port=>8080,
+        :server_certificate=>nil,
+        :policies=>[]}],
      :health_check=>
       {:interval=>30,
        :target=>"TCP:8080",
