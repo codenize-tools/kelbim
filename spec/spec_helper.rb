@@ -31,6 +31,8 @@ def elbfile(options = {})
       updated = nil
     when :show_load_balancers
       updated = client.load_balancers
+    when :show_policies
+      updated = client.policies
     else
       updated = client.apply(tempfile)
     end
