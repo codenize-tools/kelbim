@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 $: << File.expand_path("#{File.dirname __FILE__}/../lib")
 require 'rubygems'
+require 'fileutils'
 require 'json'
 require 'kelbim'
 require 'optparse'
@@ -35,6 +36,7 @@ ARGV.options do |opt|
     opt.on('-e', '--export')                  {|v| mode                              = :export              }
     opt.on('-o', '--output FILE')             {|v| output_file                       = v                    }
     opt.on('',   '--split')                   {|v| split                             = true                 }
+    opt.on('',   '--split-more')              {|v| split                             = :more                }
     opt.on('-t', '--test')                    {|v| mode                              = :test                }
     opt.on('',   '--show-load-balancers')     {|v| mode                              = :show_load_balancers }
     opt.on('',   '--show-policies')           {|v| mode                              = :show_policies       }
@@ -83,13 +85,29 @@ begin
 
       client.export do |exported, converter|
         exported.each do |vpc, elbs|
-          elb_file = File.join(File.dirname(output_file), "#{vpc || :classic}.elb")
-          requires << elb_file
+          if split == :more
+            elb_dir = File.join(File.dirname(output_file), "#{vpc || :classic}")
+            FileUtils.mkdir_p(elb_dir)
 
-          logger.info("  write `#{elb_file}`")
+            elbs.each do |name, attrs|
+              elb_file = File.join(elb_dir, "#{name}.elb")
+              requires << elb_file
 
-          open(elb_file, 'wb') do |f|
-            f.puts converter.call(vpc => elbs)
+              logger.info("  write `#{elb_file}`")
+
+              open(elb_file, 'wb') do |f|
+                f.puts converter.call(vpc => {name => attrs})
+              end
+            end
+          else
+            elb_file = File.join(File.dirname(output_file), "#{vpc || :classic}.elb")
+            requires << elb_file
+
+            logger.info("  write `#{elb_file}`")
+
+            open(elb_file, 'wb') do |f|
+              f.puts converter.call(vpc => elbs)
+            end
           end
         end
       end
