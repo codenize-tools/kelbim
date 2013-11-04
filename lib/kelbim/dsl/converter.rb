@@ -41,7 +41,7 @@ end
         instances = output_instances(load_balancer[:instances], vpc).strip
         listeners = output_listeners(load_balancer[:listeners]).strip
         health_check = output_health_check(load_balancer[:health_check]).strip
-        testcase = (is_internal and not load_balancer.fetch(:listeners, []).empty?) ? '' : ("\n    " + output_testcase(load_balancer).strip + "\n")
+        testcase = is_internal ? '' : ("\n    " + output_testcase(load_balancer[:dns_name]).strip + "\n")
 
         out = <<-EOS
   load_balancer #{name}#{internal}do#{
@@ -89,32 +89,16 @@ end
         return out
       end
 
-      def output_testcase(load_balancer)
-        dns_name = load_balancer[:dns_name]
-        ports = load_balancer[:listeners].map {|i| i[:port] }
-
-        out = <<-EOS
+      def output_testcase(dns_name)
+        <<-EOS
     spec do
-      host = #{dns_name.inspect}
-        EOS
-
-        ports.each do |port|
-          out.concat(<<-EOS)
-
-      expect {
-        timeout(3) do
-          socket = TCPSocket.open(host, #{port})
-          socket.close if socket
-        end
-      }.not_to raise_error
-          EOS
-        end
-
-        out.concat(<<-EOS)
+      # DNS Name: #{dns_name}
+      pending('This is an example')
+      url = URI.parse('http://www.example.com/')
+      res = Net::HTTP.start(url.host, url.port) {|http| http.get(url.path) }
+      expect(res).to be_a(Net::HTTPOK)
     end
         EOS
-
-        return out
       end
 
       def output_instances(instances, vpc)
