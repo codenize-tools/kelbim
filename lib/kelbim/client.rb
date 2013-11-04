@@ -145,6 +145,9 @@ module Kelbim
       end
 
       lb_list_dsl.each do |key, lb_dsl|
+        name = key[0]
+        log(:info, "Comparing #{vpc || :classic} > #{name}", :intense_black)
+
         lb_aws = lb_list_aws.delete(key)
         walk_load_balancer(lb_dsl, lb_aws)
       end
