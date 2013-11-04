@@ -6,7 +6,7 @@ require 'json'
 require 'kelbim'
 require 'optparse'
 require 'rspec'
-require 'kelbim/rspec_formatter'
+require 'kelbim/rspec-formatter'
 
 DEFAULT_FILENAME = 'ELBfile'
 
