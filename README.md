@@ -4,6 +4,9 @@ Kelbim is a tool to manage ELB.
 
 It defines the state of ELB using DSL, and updates ELB according to DSL.
 
+[![Build Status](https://drone.io/bitbucket.org/winebarrel/kelbim/status.png)](https://drone.io/bitbucket.org/winebarrel/kelbim/latest)
+
+
 **Attention! This is a alpha version!**
 
 ## Installation
