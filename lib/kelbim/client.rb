@@ -123,7 +123,7 @@ module Kelbim
         if ec2_aws
           walk_ec2(vpc, ec2_dsl, ec2_aws, elb.load_balancers)
         else
-          log(:warn, "EC2 `#{vpc || :classic}` is not found", :yellow)
+          walk_ec2(vpc, ec2_dsl, [], elb.load_balancers)
         end
       end
 
