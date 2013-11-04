@@ -22,11 +22,15 @@ def elbfile(options = {})
       })
     end
 
-    run_spec = options.delete(:run_spec)
+    mode = options.delete(:mode)
     client = Kelbim::Client.new(options)
 
-    if run_spec
+    case mode
+    when :test
       client.test(tempfile)
+      updated = nil
+    when :show_load_balancers
+      updated = client.load_balancers
     else
       updated = client.apply(tempfile)
     end

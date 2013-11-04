@@ -1,8 +1,8 @@
 require File.expand_path("#{File.dirname __FILE__}/../spec_config")
 
 describe Kelbim::Client do
-  it do
-    elbfile(:mode => :test) { (<<-EOS)
+  before do
+    elbfile { (<<-EOS)
 ec2 do
   load_balancer "my-load-balancer" do
     spec do
@@ -113,5 +113,29 @@ ec2 "vpc-cbcbc2a9" do
 end
       EOS
     }
+  end
+
+  it do
+    load_balancers = elbfile(:mode => :show_load_balancers) { '' }
+
+    load_balancers.each do |vpc, elbs|
+      elbs.each do |name, dns_name|
+        dns_name.sub!(
+          /\d+\.us-west-1\.elb\.amazonaws\.com/,
+          'NNNNNNNNNN.us-west-1.elb.amazonaws.com')
+      end
+    end
+
+    expect(load_balancers).to eq(
+{"classic"=>
+  {"my-load-balancer"=>
+    "my-load-balancer-NNNNNNNNNN.us-west-1.elb.amazonaws.com"},
+ "vpc-c1cbc2a3"=>
+  {"my-load-balancer-1"=>
+    "my-load-balancer-1-NNNNNNNNNN.us-west-1.elb.amazonaws.com"},
+ "vpc-cbcbc2a9"=>
+  {"my-load-balancer-2"=>
+    "internal-my-load-balancer-2-NNNNNNNNNN.us-west-1.elb.amazonaws.com"}}
+    )
   end
 end
