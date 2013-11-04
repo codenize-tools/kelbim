@@ -236,13 +236,13 @@ module Kelbim
         old_policies << plcy_aws
       end
 
-      if not new_policies.empty? and orig_policy_names.sort != new_policies.map {|i| i.name }.sort
+      if orig_policy_names.sort != new_policies.map {|i| i.name }.sort
         listener.policies = new_policies
+      end
 
-        unless @options.without_deleting_policy
-          old_policies.each do |plcy_aws|
-            plcy_aws.delete
-          end
+      if not old_policies.empty? and not @options.without_deleting_policy
+        old_policies.each do |plcy_aws|
+          plcy_aws.delete
         end
       end
     end
