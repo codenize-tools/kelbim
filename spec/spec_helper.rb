@@ -22,8 +22,14 @@ def elbfile(options = {})
       })
     end
 
+    run_spec = options.delete(:run_spec)
     client = Kelbim::Client.new(options)
-    updated = client.apply(tempfile)
+
+    if run_spec
+      client.test(tempfile)
+    else
+      updated = client.apply(tempfile)
+    end
   ensure
     FileUtils.rm_f(tempfile)
   end
