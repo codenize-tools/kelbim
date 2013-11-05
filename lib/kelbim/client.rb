@@ -117,7 +117,14 @@ module Kelbim
         item.vpc_id
       end
 
+      vpc_ids = @options.ec2.vpcs.map {|i| i.id }
+
       dsl_ec2s.each do |vpc, ec2_dsl|
+        if vpc and not vpc_ids.include?(vpc)
+          log(:warn, "EC2 `#{vpc}` is not found", :yellow)
+          next
+        end
+
         ec2_aws = aws_ec2s[vpc]
 
         if ec2_aws
