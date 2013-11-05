@@ -114,9 +114,11 @@ begin
       end
 
       logger.info("  write `#{output_file}`")
+      path_prefix = File.dirname(output_file)
 
       open(output_file, 'wb') do |f|
         requires.each do |elb_file|
+          elb_file.sub!(%r|\A#{Regexp.escape(path_prefix)}/?|, '')
           f.puts "require '#{elb_file}'"
         end
       end
