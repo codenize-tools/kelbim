@@ -120,6 +120,10 @@ module Kelbim
       vpc_ids = @options.ec2.vpcs.map {|i| i.id }
 
       dsl_ec2s.each do |vpc, ec2_dsl|
+        if @options.ec2s
+          next unless @options.ec2s.include?(vpc || 'classic')
+        end
+
         if vpc and not vpc_ids.include?(vpc)
           log(:warn, "EC2 `#{vpc}` is not found", :yellow)
           next

@@ -34,6 +34,7 @@ ARGV.options do |opt|
     opt.on('-f', '--file FILE')               {|v| file                              = v                    }
     opt.on('-n', '--elb-names NAMES', Array)  {|v| options[:elb_names]               = v                    }
     opt.on('',   '--dry-run')                 {    options[:dry_run]                 = true                 }
+    opt.on('',   '--ec2s VPC_IDS', Array)     {|v| options[:ec2s]                    = v                    }
     opt.on('',   '--without-deleting-policy') {    options[:without_deleting_policy] = true                 }
     opt.on('-e', '--export')                  {    mode                              = :export              }
     opt.on('-o', '--output FILE')             {|v| output_file                       = v                    }
