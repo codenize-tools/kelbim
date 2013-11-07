@@ -143,6 +143,11 @@ module Kelbim
 
       lb_list_dsl.each do |key, lb_dsl|
         name = key[0]
+
+        if @options.elb_names
+          next unless @options.elb_names.include?(name)
+        end
+
         lb_aws = lb_list_aws[key]
 
         unless lb_aws
@@ -153,6 +158,11 @@ module Kelbim
 
       lb_list_dsl.each do |key, lb_dsl|
         name = key[0]
+
+        if @options.elb_names
+          next unless @options.elb_names.include?(name)
+        end
+
         log(:info, "Comparing #{vpc || :classic} > #{name}", :intense_black)
 
         lb_aws = lb_list_aws.delete(key)
@@ -160,6 +170,12 @@ module Kelbim
       end
 
       lb_list_aws.each do |key, lb_aws|
+        name = key[0]
+
+        if @options.elb_names
+          next unless @options.elb_names.include?(name)
+        end
+
         lb_aws.delete
       end
     end

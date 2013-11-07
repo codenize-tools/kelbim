@@ -30,17 +30,18 @@ ARGV.options do |opt|
     opt.on('-k', '--access-key ACCESS_KEY')   {|v| access_key                        = v                    }
     opt.on('-s', '--secret-key SECRET_KEY')   {|v| secret_key                        = v                    }
     opt.on('-r', '--region REGION')           {|v| region                            = v                    }
-    opt.on('-a', '--apply')                   {|v| mode                              = :apply               }
+    opt.on('-a', '--apply')                   {    mode                              = :apply               }
     opt.on('-f', '--file FILE')               {|v| file                              = v                    }
-    opt.on('',   '--dry-run')                 {|v| options[:dry_run]                 = true                 }
-    opt.on('',   '--without-deleting-policy') {|v| options[:without_deleting_policy] = true                 }
-    opt.on('-e', '--export')                  {|v| mode                              = :export              }
+    opt.on('-n', '--elb-names NAMES', Array)  {|v| options[:elb_names]               = v                    }
+    opt.on('',   '--dry-run')                 {    options[:dry_run]                 = true                 }
+    opt.on('',   '--without-deleting-policy') {    options[:without_deleting_policy] = true                 }
+    opt.on('-e', '--export')                  {    mode                              = :export              }
     opt.on('-o', '--output FILE')             {|v| output_file                       = v                    }
-    opt.on('',   '--split')                   {|v| split                             = true                 }
-    opt.on('',   '--split-more')              {|v| split                             = :more                }
-    opt.on('-t', '--test')                    {|v| mode                              = :test                }
-    opt.on('',   '--show-load-balancers')     {|v| mode                              = :show_load_balancers }
-    opt.on('',   '--show-policies')           {|v| mode                              = :show_policies       }
+    opt.on('',   '--split')                   {    split                             = true                 }
+    opt.on('',   '--split-more')              {    split                             = :more                }
+    opt.on('-t', '--test')                    {    mode                              = :test                }
+    opt.on('',   '--show-load-balancers')     {    mode                              = :show_load_balancers }
+    opt.on('',   '--show-policies')           {    mode                              = :show_policies       }
     opt.on(''  , '--no-color')                {    options[:color]                   = false                }
     opt.on(''  , '--debug')                   {    options[:debug]                   = true                 }
     opt.parse!
