@@ -17,7 +17,7 @@ module Kelbim
                 :port              => dsl.port,
                 :instance_protocol => dsl.instance_protocol,
                 :instance_port     => dsl.instance_port,
-                :policies          => dsl.policies.map {|i| Listener::PolicyCollection.create_mock_policy(i) },
+                :policies          => [], # Listener作成時に同時にPolicyを作成することはできない
                 :load_balancer     => load_balancer,
               })
 

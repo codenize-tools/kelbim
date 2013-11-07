@@ -31,9 +31,12 @@ module Kelbim
             :vpc_id       => vpc,
             :instances    => [], # instancesはLoadBalancerの処理で更新
             :scheme       => dsl.scheme,
-            :listeners    => dsl.listeners.map {|i| LoadBalancer::ListenerCollection.create_mock_listener(i, @load_balancer) },
             :health_check => {}, # health_checkはLoadBalancerの処理で更新
           })
+
+          lb.listeners = dsl.listeners.map do |lstnr|
+            LoadBalancer::ListenerCollection.create_mock_listener(lstnr, lb)
+          end
 
           if vpc
             lb.subnets = dsl.subnets.map {|i| OpenStruct.new(:id => i) }
