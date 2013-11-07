@@ -14,7 +14,7 @@ module Kelbim
               include Logger::ClientHelper
 
               class << self
-                def create_mock_policy(dsl)
+                def create_mock_policy(dsl, listener)
                   dsl_type, dsl_name_or_attrs = dsl
                   policy_type = PolicyTypes.symbol_to_string(dsl_type)
                   plcy = OpenStruct.new(:type => policy_type)
@@ -23,11 +23,24 @@ module Kelbim
                     plcy.name = dsl_name_or_attrs
                     plcy.attribute = {'<new policy attribute name>' => ['<new policy attribute value>']}
                   else
-                    plcy.name = '<new policy name>'
+                    plcy.name = create_policy_name(listener, policy_type).sub(/\w+-\w+-\w+-\w+-\w+\Z/, '...')
                     plcy.attributes = PolicyTypes.unexpand(dsl_type, dsl_name_or_attrs)
                   end
 
                   return plcy
+                end
+
+                def create_policy_name(listener, policy_type)
+                  [
+                    listener.load_balancer.vpc_id || :classic,
+                    listener.load_balancer.name,
+                    listener.protocol,
+                    listener.port,
+                    listener.instance_protocol,
+                    listener.instance_port,
+                    policy_type,
+                    UUID.new.generate,
+                  ].join('-').gsub(/\s/, '_')
                 end
               end # of class methods
 
@@ -49,7 +62,7 @@ module Kelbim
                 log_id += PolicyTypes.name?(dsl_name_or_attrs) ? dsl_name_or_attrs : dsl_name_or_attrs.inspect
                 log(:info, 'Create Policy', :cyan, log_id)
 
-                plcy = @options.dry_run ? self.class.create_mock_policy(dsl) : create_policy(dsl)
+                plcy = @options.dry_run ? self.class.create_mock_policy(dsl, @listener) : create_policy(dsl)
                 Policy.new(plcy, @listener, @options)
               end
 
@@ -65,19 +78,8 @@ module Kelbim
                     raise "Can't find Policy: #{dsl_name_or_attrs} in #{@listener.load_balancer.vpc_id || :classic} > #{@listener.load_balancer.name}"
                   end
                 else
-                  policy_name = [
-                    @listener.load_balancer.vpc_id || :classic,
-                    @listener.load_balancer.name,
-                    @listener.protocol,
-                    @listener.port,
-                    @listener.instance_protocol,
-                    @listener.instance_port,
-                    policy_type,
-                    UUID.new.generate,
-                  ].join('-').gsub(/\s/, '_')
-
                   plcy = @listener.load_balancer.policies.create(
-                    policy_name,
+                    self.class.create_policy_name(@listener, policy_type),
                     policy_type,
                     PolicyTypes.unexpand(dsl_type, dsl_name_or_attrs)
                   )
