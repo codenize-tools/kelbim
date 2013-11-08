@@ -25,7 +25,12 @@ module AWS
       def attributes=(attrs)
         credentials = AWS.config.credential_provider.credentials
         elb = AWS::ELB.new(credentials)
-        elb.client.modify_load_balancer_attributes(attrs)
+
+        elb.client.modify_load_balancer_attributes({
+          :load_balancer_name       => self.name,
+          :load_balancer_attributes => attrs,
+        })
+
         (@attributes = attrs).dup
       end
     end # LoadBalancer

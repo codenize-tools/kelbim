@@ -15,7 +15,7 @@ module Kelbim
           end
 
           def result
-            required(:cross_zone_load_balancing)
+            required(:cross_zone_load_balancing, @result[:cross_zone_load_balancing])
             @result
           end
 

@@ -82,7 +82,7 @@ module Kelbim
             log(:info, '  set attributes=' + dsl.attributes.inspect, :green)
 
             unless @options.dry_run
-              @load_balancer.attributes = attributes
+              @load_balancer.attributes = dsl.attributes
               @options.updated = true
             end
           end
