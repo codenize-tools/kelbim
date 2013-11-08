@@ -12,19 +12,32 @@ proc {
     :name    => 'DescribeLoadBalancerAttributes',
     :method  => :describe_load_balancer_attributes,
     :inputs  => {'LoadBalancerName' => [:string, :required]},
+    :outputs => {
+      :children => {
+        'ResponseMetadata' => {
+          :ignore   => true,
+          :children => {'RequestId' => {:ignore => true}}},
+        'DescribeLoadBalancerAttributesResult' => {
+          :ignore   => true,
+          :children => {
+            'LoadBalancerAttributes' => {
+              :ignore   => true,
+              :children => {
+                'CrossZoneLoadBalancing' => {
+                  :children => {
+                    'Enabled' => {:type => :boolean}}}}}}}}}
   })
 
   define_client_method.call({
-    :name    => 'ModifyLoadBalancerAttributes',
-    :method  => :modify_load_balancer_attributes,
-    :inputs  => {
+    :name   => 'ModifyLoadBalancerAttributes',
+    :method => :modify_load_balancer_attributes,
+    :inputs => {
+      'LoadBalancerName' => [:string, :required],
       'LoadBalancerAttributes' => [{
         :structure => {
           'CrossZoneLoadBalancing' => [{
-            :structure => {'Enabled' => [:boolean]}
-          }]
-        }
-      }, :required]
+            :structure => {'Enabled' => [:boolean]}}]}},
+        :required]
     },
   })
 }.call
