@@ -65,6 +65,10 @@ ec2 do
       unhealthy_threshold 2
     end
 
+    attributes do
+      cross_zone_load_balancing :enabled => false
+    end
+
     availability_zones(
       "ap-northeast-1a",
       "ap-northeast-1b"
@@ -97,6 +101,10 @@ ec2 "vpc-XXXXXXXXX" do
       unhealthy_threshold 2
     end
 
+    attributes do
+      cross_zone_load_balancing :enabled => true
+    end
+
     subnets(
       "subnet-XXXXXXXX"
     )
@@ -114,14 +122,9 @@ end
 ec2 "vpc-XXXXXXXXX" do
   load_balancer "my-load-balancer" do
     spec do
-      host = "my-load-balancer-XXXXXXXXXX.ap-northeast-1.elb.amazonaws.com"
-
-      expect {
-        timeout(3) do
-          socket = TCPSocket.open(host, 8080)
-          socket.close if socket
-        end
-      }.not_to raise_error
+      url = URI.parse('http://www.example.com/')
+      res = Net::HTTP.start(url.host, url.port) {|http| http.get(url.path) }
+      expect(res).to be_a(Net::HTTPOK)
     end
     ...
 ```
