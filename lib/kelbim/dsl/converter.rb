@@ -41,6 +41,7 @@ end
         instances = output_instances(load_balancer[:instances], vpc).strip
         listeners = output_listeners(load_balancer[:listeners]).strip
         health_check = output_health_check(load_balancer[:health_check]).strip
+        attributes = output_attributes(load_balancer[:attributes]).strip
         testcase = is_internal ? '' : ("\n    " + output_testcase(load_balancer[:dns_name]).strip + "\n")
 
         out = <<-EOS
@@ -51,6 +52,8 @@ end
     #{listeners}
 
     #{health_check}
+
+    #{attributes}
         EOS
 
         if vpc
@@ -178,6 +181,17 @@ end
       interval #{interval}
       healthy_threshold #{healthy_threshold}
       unhealthy_threshold #{unhealthy_threshold}
+    end
+        EOS
+      end
+
+      def output_attributes(attributes)
+        cross_zone_load_balancing = attributes[:cross_zone_load_balancing].inspect
+        cross_zone_load_balancing.sub!(/\A\s*{\s*/, '').sub!(/\s*}\s*\Z/, '')
+
+        <<-EOS
+    attributes do
+      cross_zone_load_balancing #{cross_zone_load_balancing}
     end
         EOS
       end
