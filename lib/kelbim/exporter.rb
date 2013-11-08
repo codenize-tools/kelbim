@@ -33,6 +33,7 @@ module Kelbim
         :health_check => load_balancer.health_check,
         :scheme       => load_balancer.scheme,
         :dns_name     => load_balancer.dns_name,
+        :attributes   => load_balancer.attributes,
       }
 
       if @fetch_policies and load_balancer.policies.first

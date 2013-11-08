@@ -103,6 +103,7 @@ end
        :timeout=>5,
        :unhealthy_threshold=>2},
      :scheme=>"internet-facing",
+     :attributes=>{:cross_zone_load_balancing=>{:enabled=>false}},
      :dns_name=>"my-load-balancer-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :availability_zones=>["us-west-1a"]}},
  "vpc-c1cbc2a3"=>
@@ -122,6 +123,7 @@ end
        :timeout=>5,
        :unhealthy_threshold=>2},
      :scheme=>"internet-facing",
+     :attributes=>{:cross_zone_load_balancing=>{:enabled=>false}},
      :dns_name=>"my-load-balancer-1-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :subnets=>["subnet-5e1c153c"],
      :security_groups=>["default"]}},
@@ -142,6 +144,7 @@ end
        :timeout=>5,
        :unhealthy_threshold=>2},
      :scheme=>"internal",
+     :attributes=>{:cross_zone_load_balancing=>{:enabled=>false}},
      :dns_name=>
       "internal-my-load-balancer-2-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :subnets=>["subnet-211c1543"],

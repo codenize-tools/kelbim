@@ -139,6 +139,7 @@ end
        :timeout=>5,
        :unhealthy_threshold=>2},
      :scheme=>"internet-facing",
+     :attributes=>{:cross_zone_load_balancing=>{:enabled=>false}},
      :dns_name=>"my-load-balancer-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :availability_zones=>["us-west-1a"]},
    "my-load-balancer-2"=>
@@ -157,6 +158,7 @@ end
        :timeout=>5,
        :unhealthy_threshold=>2},
      :scheme=>"internet-facing",
+     :attributes=>{:cross_zone_load_balancing=>{:enabled=>false}},
      :dns_name=>"my-load-balancer-2-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :availability_zones=>["us-west-1a", "us-west-1b", "us-west-1c"]}}}
     )

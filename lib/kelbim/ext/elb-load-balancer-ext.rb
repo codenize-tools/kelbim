@@ -16,7 +16,7 @@ module AWS
           credentials = AWS.config.credential_provider.credentials
           elb = AWS::ELB.new(credentials)
           @attributes = elb.client.describe_load_balancer_attributes(
-            :load_balancer_name => self.name)
+            :load_balancer_name => self.name).data
         end
 
         return @attributes.dup
