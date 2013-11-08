@@ -1,6 +1,7 @@
 require 'ostruct'
 require 'kelbim/dsl/checker'
 require 'kelbim/dsl/health-check'
+require 'kelbim/dsl/attributes'
 require 'kelbim/dsl/listeners'
 
 module Kelbim
@@ -27,6 +28,7 @@ module Kelbim
         def result
           required(:listeners, @result.listeners)
           required(:health_check, @result.health_check)
+          #required(:attributes, @result.attributes)
 
           if @vpc
             required(:subnets, @result.subnets)
@@ -61,6 +63,11 @@ module Kelbim
         def health_check(&block)
           call_once(:health_check)
           @result.health_check = HealthCheck.new(@name, &block).result
+        end
+
+        def attributes(&block)
+          call_once(:attributes)
+          @result.attributes = Attributes.new(@name, &block).result
         end
 
         def subnets(*values)
