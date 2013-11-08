@@ -28,6 +28,7 @@ module Kelbim
           end
 
           compare_health_check(dsl) or return false
+          compare_attributes(dsl) or return false
 
           if self.vpc_id
             compare_subnet_ids(dsl) or return false
@@ -73,6 +74,15 @@ module Kelbim
 
             unless @options.dry_run
               @load_balancer.configure_health_check(dsl.health_check)
+              @options.updated = true
+            end
+          end
+
+          compare_attributes(dsl) do
+            log(:info, '  set attributes=' + dsl.attributes.inspect, :green)
+
+            unless @options.dry_run
+              @load_balancer.attributes = attributes
               @options.updated = true
             end
           end
@@ -174,6 +184,13 @@ module Kelbim
 
         def compare_health_check(dsl)
           same = (@load_balancer.health_check.sort == dsl.health_check.sort)
+          yield if !same && block_given?
+          return same
+        end
+
+        def compare_attributes(dsl)
+          return true unless dsl.attributes
+          same = (@load_balancer.attributes.sort == dsl.attributes.sort)
           yield if !same && block_given?
           return same
         end

@@ -32,6 +32,7 @@ module Kelbim
             :instances    => [], # instancesはLoadBalancerの処理で更新
             :scheme       => dsl.scheme,
             :health_check => {}, # health_checkはLoadBalancerの処理で更新
+            :attributes   => {}, # attributesはLoadBalancerの処理で更新
           })
 
           lb.listeners = dsl.listeners.map do |lstnr|
@@ -69,7 +70,7 @@ module Kelbim
             opts[:availability_zones] = dsl.availability_zones.map {|i|  AWS::EC2::AvailabilityZone.new(i) }
           end
 
-          # health_checkはLoadBalancerの処理で更新
+          # health_check、attributesはLoadBalancerの処理で更新
           lb = @load_balancers.create(dsl.name, opts)
           @options.updated = true
         end
