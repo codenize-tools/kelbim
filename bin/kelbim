@@ -86,7 +86,7 @@ begin
       output_file = DEFAULT_FILENAME if output_file == '-'
       requires = []
 
-      client.export do |exported, converter|
+      client.export(options[:elb_names]) do |exported, converter|
         exported.each do |vpc, elbs|
           if split == :more
             elb_dir = File.join(File.dirname(output_file), "#{vpc || :classic}")
@@ -127,10 +127,10 @@ begin
     else
       if output_file == '-'
         logger.info('# Export ELB')
-        puts client.export
+        puts client.export(options[:elb_names])
       else
         logger.info("Export ELB to `#{output_file}`")
-        open(output_file, 'wb') {|f| f.puts client.export }
+        open(output_file, 'wb') {|f| f.puts client.export(options[:elb_names]) }
       end
     end
   when :apply

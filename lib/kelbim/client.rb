@@ -74,12 +74,12 @@ module Kelbim
       return retval
     end
 
-    def export
+    def export(elb_names = nil)
       exported = nil
       instance_names = nil
 
       AWS.memoize do
-        exported = Exporter.export(@options.elb)
+        exported = Exporter.export(@options.elb, :elb_names => elb_names)
         instance_names = @options.ec2.instance_names
       end
 
