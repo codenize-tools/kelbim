@@ -12,12 +12,15 @@ module Kelbim
     def initialize(elb, options = {})
       @elb = elb
       @fetch_policies = options[:fetch_policies]
+      @elb_names = options[:elb_names]
     end
 
     def export
       result = {}
+      lbs = @elb.load_balancers
+      lbs = @elb_names.map {|i| lbs[i] } if @elb_names
 
-      @elb.load_balancers.each do |lb|
+      lbs.each do |lb|
         result[lb.vpc_id] ||= {}
         result[lb.vpc_id][lb.name] = export_load_balancer(lb)
       end
