@@ -17,8 +17,16 @@ module Kelbim
     def export
       result = {}
       lbs = @elb.load_balancers
+
+      ec2s = @options[:ec2s]
       elb_names = @options[:elb_names]
-      lbs = lbs.select {|i| elb_names.include?(i.name) } if elb_names
+
+      if ec2s or elb_names
+        lbs = lbs.select do |lb|
+          (ec2s.nil? or ec2s.include?(lb.vpc_id || 'classic')) &&
+          (elb_names.nil? or elb_names.include?(lb.name))
+        end
+      end
 
       lbs.each do |lb|
         result[lb.vpc_id] ||= {}
