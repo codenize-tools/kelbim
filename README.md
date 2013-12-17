@@ -138,6 +138,3 @@ Test `ELBfile`
 Finished in 3.16 seconds
 3 examples, 0 failures
 ```
-
-## Link
-* [RubyGems.org site](http://rubygems.org/gems/kelbim)

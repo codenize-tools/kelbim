@@ -11,14 +11,22 @@ module Kelbim
 
     def initialize(elb, options = {})
       @elb = elb
-      @fetch_policies = options[:fetch_policies]
-      @elb_names = options[:elb_names]
+      @options = options
     end
 
     def export
       result = {}
       lbs = @elb.load_balancers
-      lbs = @elb_names.map {|i| lbs[i] } if @elb_names
+
+      ec2s = @options[:ec2s]
+      elb_names = @options[:elb_names]
+
+      if ec2s or elb_names
+        lbs = lbs.select do |lb|
+          (ec2s.nil? or ec2s.include?(lb.vpc_id || 'classic')) &&
+          (elb_names.nil? or elb_names.include?(lb.name))
+        end
+      end
 
       lbs.each do |lb|
         result[lb.vpc_id] ||= {}
@@ -39,7 +47,7 @@ module Kelbim
         :attributes   => load_balancer.attributes,
       }
 
-      if @fetch_policies and load_balancer.policies.first
+      if @options[:fetch_policies] and load_balancer.policies.first
         attrs[:policies] = h = {}
         load_balancer.policies.each {|i| h[i.name] = i.type }
       end
