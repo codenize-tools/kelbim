@@ -67,6 +67,7 @@ ec2 do
     end
 
     attributes do
+      access_log :enabled=>false
       cross_zone_load_balancing :enabled => false
     end
 
