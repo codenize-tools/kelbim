@@ -67,7 +67,7 @@ ec2 do
     end
 
     attributes do
-      access_log :enabled=>false
+      access_log :enabled => false
       cross_zone_load_balancing :enabled => false
     end
 
@@ -104,7 +104,7 @@ ec2 "vpc-XXXXXXXXX" do
     end
 
     attributes do
-      access_log :enabled=>true, :s3_bucket_name=>"any_bucket", :s3_bucket_prefix=>nil, :emit_interval=>60
+      access_log :enabled => true, :s3_bucket_name => "any_bucket", :s3_bucket_prefix => nil, :emit_interval => 60
       cross_zone_load_balancing :enabled => true
     end
 
