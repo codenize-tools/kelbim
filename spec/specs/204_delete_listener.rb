@@ -368,7 +368,7 @@ end
      :security_groups=>["default", "vpc-c1cbc2a3-1", "vpc-c1cbc2a3-2"]}},
  "vpc-cbcbc2a9"=>
   {"my-load-balancer-2"=>
-    {:instances=>["i-0f6e1f54", "i-1c953346", "i-1f953345", "i-8b5120d0"],
+    {:instances=>["i-113d714e", "i-123d714d", "i-4869ff14", "i-4969ff15"],
      :listeners=>
       [{:protocol=>:http,
         :port=>80,
