@@ -24,7 +24,6 @@ module Kelbim
               value = args.first
               call_once(method_name)
               expected_type(value, Hash)
-              expected_length(value, 1)
               @result[method_name] = value
             else
               super
