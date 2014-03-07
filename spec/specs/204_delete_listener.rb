@@ -236,7 +236,7 @@ end
     expect(exported).to eq(
 {nil=>
   {"my-load-balancer"=>
-    {:instances=>["i-5cf2c707", "i-5df2c706", "i-6097f23a", "i-6197f23b"],
+    {:instances=>["i-cd1c8a91", "i-e01086bc", "i-e11086bd", "i-e21086be"],
      :listeners=>
       [{:protocol=>:http,
         :port=>80,
@@ -260,7 +260,7 @@ end
      :availability_zones=>["us-west-1a", "us-west-1b", "us-west-1c"]}},
  "vpc-c1cbc2a3"=>
   {"my-load-balancer-1"=>
-    {:instances=>["i-a89605f3", "i-a99605f2", "i-e15739bb", "i-e65739bc"],
+    {:instances=>["i-1e68fe42", "i-1f68fe43", "i-5f3c7000", "i-9d236fc2"],
      :listeners=>
       [{:protocol=>:https,
         :port=>443,

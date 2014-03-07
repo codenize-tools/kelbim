@@ -78,7 +78,7 @@ end
     expect(exported).to eq(
 {"vpc-c1cbc2a3"=>
   {"my-load-balancer-1"=>
-    {:instances=>["i-a89605f3", "i-a99605f2", "i-e15739bb", "i-e65739bc"],
+    {:instances=>["i-1e68fe42", "i-1f68fe43", "i-5f3c7000", "i-9d236fc2"],
      :listeners=>
       [{:protocol=>:http,
         :port=>80,
@@ -98,7 +98,7 @@ end
      :subnets=>["subnet-567c3610", "subnet-5e1c153c"],
      :security_groups=>["default", "vpc-c1cbc2a3-1", "vpc-c1cbc2a3-2"]},
    "my-load-balancer-2"=>
-    {:instances=>["i-a89605f3", "i-a99605f2", "i-e15739bb", "i-e65739bc"],
+    {:instances=>["i-1e68fe42", "i-1f68fe43", "i-5f3c7000", "i-9d236fc2"],
      :listeners=>
       [{:protocol=>:http,
         :port=>80,

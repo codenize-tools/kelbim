@@ -350,7 +350,7 @@ end
      :availability_zones=>["us-west-1b", "us-west-1c"]}},
  "vpc-c1cbc2a3"=>
   {"my-load-balancer-1"=>
-    {:instances=>["i-a89605f3", "i-a99605f2", "i-e15739bb", "i-e65739bc"],
+    {:instances=>["i-1e68fe42", "i-1f68fe43", "i-5f3c7000", "i-9d236fc2"],
      :listeners=>
       [{:protocol=>:https,
         :port=>443,

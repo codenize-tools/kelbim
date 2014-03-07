@@ -124,7 +124,7 @@ end
     expect(exported).to eq(
 {nil=>
   {"my-load-balancer"=>
-    {:instances=>["i-5cf2c707", "i-5df2c706", "i-6097f23a", "i-6197f23b"],
+    {:instances=>["i-cd1c8a91", "i-e01086bc", "i-e11086bd", "i-e21086be"],
      :listeners=>
       [{:protocol=>:http,
         :port=>80,
@@ -143,7 +143,7 @@ end
      :dns_name=>"my-load-balancer-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :availability_zones=>["us-west-1a"]},
    "my-load-balancer-2"=>
-    {:instances=>["i-5cf2c707", "i-5df2c706", "i-6097f23a", "i-6197f23b"],
+    {:instances=>["i-cd1c8a91", "i-e01086bc", "i-e11086bd", "i-e21086be"],
      :listeners=>
       [{:protocol=>:http,
         :port=>80,
