@@ -19,11 +19,16 @@ module Kelbim
             @result
           end
 
-          def cross_zone_load_balancing(value)
-            call_once(:cross_zone_load_balancing)
-            expected_type(value, Hash)
-            expected_length(value, 1)
-            @result[:cross_zone_load_balancing] = value
+          def method_missing(method_name, *args)
+            if args.length == 1
+              value = args.first
+              call_once(method_name)
+              expected_type(value, Hash)
+              expected_length(value, 1)
+              @result[method_name] = value
+            else
+              super
+            end
           end
         end # Attributes
       end # LoadBalancer

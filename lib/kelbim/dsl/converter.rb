@@ -186,12 +186,14 @@ end
       end
 
       def output_attributes(attributes)
-        cross_zone_load_balancing = attributes[:cross_zone_load_balancing].inspect
-        cross_zone_load_balancing.sub!(/\A\s*{\s*/, '').sub!(/\s*}\s*\Z/, '')
+        attributes = attributes.map do |name, value|
+          value = value.inspect.sub(/\A\s*{\s*/, '').sub!(/\s*}\s*\Z/, '')
+          [name, value]
+        end
 
         <<-EOS
     attributes do
-      cross_zone_load_balancing #{cross_zone_load_balancing}
+      #{attributes.map {|n, v| "#{n} #{v}"}.join("\n      ")}
     end
         EOS
       end
