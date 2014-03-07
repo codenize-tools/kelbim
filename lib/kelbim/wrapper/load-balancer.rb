@@ -224,7 +224,6 @@ module Kelbim
 
         def compare_instances(dsl)
           aws_instance_ids = @load_balancer.instances.map {|i| i.id }.sort
-p @options.instance_names
 
           dsl_instance_ids = dsl.instances.map {|i|
             instance_names = @options.instance_names[self.vpc_id] || {}
