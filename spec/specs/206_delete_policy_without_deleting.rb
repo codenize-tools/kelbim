@@ -621,6 +621,7 @@ end
     with_elb do |elb|
       my_load_balancer_policies = get_policy_names(elb, 'my-load-balancer')
       expect(my_load_balancer_policies).to eq([
+        nil,
         "classic-my-load-balancer-http-80-http-80-LBCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
         "classic-my-load-balancer-https-443-http-80-AppCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
         "classic-my-load-balancer-https-443-http-80-SSLNegotiationPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
@@ -628,12 +629,14 @@ end
 
       my_load_balancer_1_policies = get_policy_names(elb, 'my-load-balancer-1')
       expect(my_load_balancer_1_policies).to eq([
+        nil,
         "vpc-c1cbc2a3-my-load-balancer-1-https-443-http-80-LBCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
         "vpc-c1cbc2a3-my-load-balancer-1-https-443-http-80-SSLNegotiationPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
       ])
 
       my_load_balancer_2_policies = get_policy_names(elb, 'my-load-balancer-2')
       expect(my_load_balancer_2_policies).to eq([
+        nil,
         "vpc-cbcbc2a9-my-load-balancer-2-http-80-http-80-LBCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
         "vpc-cbcbc2a9-my-load-balancer-2-https-443-http-80-AppCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
         "vpc-cbcbc2a9-my-load-balancer-2-https-443-http-80-SSLNegotiationPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",

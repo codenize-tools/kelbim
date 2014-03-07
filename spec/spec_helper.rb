@@ -99,8 +99,8 @@ def with_elb
 end
 
 def get_policy_names(elb, name)
- lb = elb.load_balancers[name]
- lb.policies.map {|policy|
-   policy.name.sub!(/\w+-\w+-\w+-\w+-\w+\Z/, 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
-  }.sort
+  lb = elb.load_balancers[name]
+  lb.policies.map {|policy|
+    policy.name.sub!(/\w+-\w+-\w+-\w+-\w+\Z/, 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
+  }.sort_by {|i| i || '' }
 end
