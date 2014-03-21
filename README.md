@@ -69,6 +69,7 @@ ec2 do
     attributes do
       access_log :enabled => false
       cross_zone_load_balancing :enabled => false
+      connection_draining :enabled => false, :timeout => 300
     end
 
     availability_zones(
@@ -106,6 +107,7 @@ ec2 "vpc-XXXXXXXXX" do
     attributes do
       access_log :enabled => true, :s3_bucket_name => "any_bucket", :s3_bucket_prefix => nil, :emit_interval => 60
       cross_zone_load_balancing :enabled => true
+      connection_draining :enabled => false, :timeout => 300
     end
 
     subnets(
