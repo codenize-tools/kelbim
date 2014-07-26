@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+- 2.0.0
+script:
+- bundle install
+- bundle exec rake
+env:
+  global:
+  - TEST_AWS_REGION=us-west-1
+  - secure: hQqcN97HrDCiINqXWuAOZ5DJvYn1oDEfQyNZgRq3ixEVrFUsH8TrU2WWiosxkbjtLgHiG1dHvsGVJY3ixLzKLjXkDQM1Rxev/F30GL8SU5vdgl0SJPeBmKMFcoDBOp1+Q0I0FqvJzvvixpETbyTpXkZ7jIGchQgqt88CykT5T0Y=
+  - secure: IvdrH/RG/hwUkMsQRcksUqazm82Wa0OH1PAJ2ApXnp7uW6sdiyekCDrUJTXFUC4bmzcoD9U4Y2FqukzqdhLoRUigsLoGNC2u1hckCSqDUWGKKU56txlOdWsAJriPvj0hkH+7CY70HFyEu5Ihy1GshM9KHDd9uZFvX4BM+x34318=
