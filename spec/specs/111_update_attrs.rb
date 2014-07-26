@@ -212,7 +212,7 @@ ec2 "vpc-cbcbc2a9" do
 
     attributes do
       connection_settings :idle_timeout=>900
-      access_log :enabled=>true
+      access_log :enabled=>false
       cross_zone_load_balancing :enabled=>false
     end
 
@@ -292,7 +292,7 @@ end
        :timeout=>5,
        :unhealthy_threshold=>10},
      :scheme=>"internal",
-     :attributes=>{:connection_settings=>{:idle_timeout=>900}, :access_log=>{:enabled=>true}, :cross_zone_load_balancing=>{:enabled=>false}, :connection_draining=>{:enabled=>false, :timeout=>300}},
+     :attributes=>{:connection_settings=>{:idle_timeout=>900}, :access_log=>{:enabled=>false}, :cross_zone_load_balancing=>{:enabled=>false}, :connection_draining=>{:enabled=>false, :timeout=>300}},
      :dns_name=>
       "internal-my-load-balancer-2-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :subnets=>["subnet-211c1543", "subnet-487c360e"],
