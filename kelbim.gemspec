@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["sgwr_dts@yahoo.co.jp"]
   spec.description   = "Kelbim is a tool to manage ELB. It defines the state of ELB using DSL, and updates ELB according to DSL."
   spec.summary       = "Kelbim is a tool to manage ELB."
-  spec.homepage      = "https://bitbucket.org/winebarrel/kelbim"
+  spec.homepage      = "https://github.com/winebarrel/kelbim"
   spec.license       = "MIT"
 
   #spec.files         = `git ls-files`.split($/)
