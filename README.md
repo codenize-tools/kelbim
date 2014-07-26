@@ -67,6 +67,7 @@ ec2 do
     end
 
     attributes do
+      connection_settings :idle_timeout=>60
       access_log :enabled => false
       cross_zone_load_balancing :enabled => false
       connection_draining :enabled => false, :timeout => 300

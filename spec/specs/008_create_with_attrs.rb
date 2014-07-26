@@ -270,6 +270,7 @@ end
      :dns_name=>"my-load-balancer-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
       {:access_log=>{:enabled=>false},
+       :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>true},
        :connection_draining=>{:enabled=>false, :timeout=>300}},
      :availability_zones=>["us-west-1a", "us-west-1b", "us-west-1c"]}},
@@ -403,6 +404,7 @@ end
      :dns_name=>"my-load-balancer-1-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
       {:access_log=>{:enabled=>false},
+       :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>true},
        :connection_draining=>{:enabled=>false, :timeout=>300}},
      :subnets=>["subnet-567c3610", "subnet-5e1c153c"],
@@ -542,6 +544,7 @@ end
       "internal-my-load-balancer-2-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
       {:access_log=>{:enabled=>false},
+       :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>false},
        :connection_draining=>{:enabled=>false, :timeout=>300}},
      :subnets=>["subnet-211c1543", "subnet-487c360e"],
