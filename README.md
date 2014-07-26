@@ -41,6 +41,31 @@ kelbim -a --dry-run
 kelbim -a             # apply `ELBfile` to ELB
 ```
 
+## Help
+
+```
+Usage: kelbim [options]
+    -p, --profile PROFILE_NAME
+    -k, --access-key ACCESS_KEY
+    -s, --secret-key SECRET_KEY
+    -r, --region REGION
+    -a, --apply
+    -f, --file FILE
+    -n, --elb-names NAMES
+        --dry-run
+        --ec2s VPC_IDS
+        --without-deleting-policy
+    -e, --export
+    -o, --output FILE
+        --split
+        --split-more
+    -t, --test
+        --show-load-balancers
+        --show-policies
+        --no-color
+        --debug
+```
+
 ## ELBfile example
 
 ```ruby
