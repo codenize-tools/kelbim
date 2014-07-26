@@ -93,7 +93,7 @@ end
        :timeout=>5,
        :unhealthy_threshold=>2},
      :scheme=>"internet-facing",
-     :attributes=>{:access_log=>{:enabled=>false}, :cross_zone_load_balancing=>{:enabled=>false}, :connection_draining=>{:enabled=>false, :timeout=>300}},
+     :attributes=>{:connection_settings=>{:idle_timeout=>60}, :access_log=>{:enabled=>false}, :cross_zone_load_balancing=>{:enabled=>false}, :connection_draining=>{:enabled=>false, :timeout=>300}},
      :dns_name=>"my-load-balancer-1-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :subnets=>["subnet-567c3610", "subnet-5e1c153c"],
      :security_groups=>["default", "vpc-c1cbc2a3-1", "vpc-c1cbc2a3-2"]},
@@ -113,7 +113,7 @@ end
        :timeout=>5,
        :unhealthy_threshold=>2},
      :scheme=>"internet-facing",
-     :attributes=>{:access_log=>{:enabled=>false}, :cross_zone_load_balancing=>{:enabled=>false}, :connection_draining=>{:enabled=>false, :timeout=>300}},
+     :attributes=>{:connection_settings=>{:idle_timeout=>60}, :access_log=>{:enabled=>false}, :cross_zone_load_balancing=>{:enabled=>false}, :connection_draining=>{:enabled=>false, :timeout=>300}},
      :dns_name=>"my-load-balancer-2-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :subnets=>["subnet-567c3610", "subnet-5e1c153c"],
      :security_groups=>["default", "vpc-c1cbc2a3-1", "vpc-c1cbc2a3-2"]}}}
