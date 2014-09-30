@@ -46,6 +46,7 @@ kelbim -a             # apply `ELBfile` to ELB
 ```
 Usage: kelbim [options]
     -p, --profile PROFILE_NAME
+        --credentials-path PATH
     -k, --access-key ACCESS_KEY
     -s, --secret-key SECRET_KEY
     -r, --region REGION
