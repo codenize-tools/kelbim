@@ -190,7 +190,15 @@ module Kelbim
 
         def compare_attributes(dsl)
           return true unless dsl.attributes
-          same = (@load_balancer.attributes.sort == dsl.attributes.sort)
+
+          # Comparison only key that is included in the DSL
+          lb_attributes = {}
+
+          dsl.attributes.keys.each do |key|
+            lb_attributes[key] = @load_balancer.attributes[key]
+          end
+
+          same = (lb_attributes.sort == dsl.attributes.sort)
           yield if !same && block_given?
           return same
         end
