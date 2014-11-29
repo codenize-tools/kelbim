@@ -187,7 +187,12 @@ end
 
       def output_attributes(attributes)
         attributes = attributes.map do |name, value|
-          value = value.inspect.sub(/\A\s*{\s*/, '').sub!(/\s*}\s*\Z/, '')
+          if value.kind_of?(Hash)
+            value = value.inspect.sub(/\A\s*{\s*/, '').sub!(/\s*}\s*\Z/, '')
+          else
+            value = value.inspect
+          end
+
           [name, value]
         end
 

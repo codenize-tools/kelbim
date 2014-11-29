@@ -23,7 +23,7 @@ module Kelbim
             if args.length == 1
               value = args.first
               call_once(method_name)
-              expected_type(value, Hash)
+              expected_type(value, Hash, Array)
               @result[method_name] = value
             else
               super

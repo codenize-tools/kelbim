@@ -251,13 +251,13 @@ end
         :instance_port=>80,
         :server_certificate=>"test1",
         :policies=>
-         [{:name=>"ELBSecurityPolicy-2014-01",
+         [{:name=>"ELBSecurityPolicy-2014-10",
            :type=>"SSLNegotiationPolicyType",
            :attributes=>
-            {"Reference-Security-Policy"=>["ELBSecurityPolicy-2014-01"],
+            {"Reference-Security-Policy"=>["ELBSecurityPolicy-2014-10"],
              "Protocol-SSLv2"=>["false"],
              "Protocol-TLSv1"=>["true"],
-             "Protocol-SSLv3"=>["true"],
+             "Protocol-SSLv3"=>["false"],
              "Protocol-TLSv1.1"=>["true"],
              "Protocol-TLSv1.2"=>["true"],
              "Server-Defined-Cipher-Order"=>["true"],
@@ -358,7 +358,8 @@ end
      :scheme=>"internet-facing",
      :dns_name=>"my-load-balancer-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
-      {:access_log=>{:enabled=>false},
+      {:additional_attributes=>[],
+       :access_log=>{:enabled=>false},
        :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>false},
        :connection_draining=>{:enabled=>false, :timeout=>300}},
@@ -373,13 +374,13 @@ end
         :instance_port=>80,
         :server_certificate=>"test2",
         :policies=>
-         [{:name=>"ELBSecurityPolicy-2014-01",
+         [{:name=>"ELBSecurityPolicy-2014-10",
            :type=>"SSLNegotiationPolicyType",
            :attributes=>
-            {"Reference-Security-Policy"=>["ELBSecurityPolicy-2014-01"],
+            {"Reference-Security-Policy"=>["ELBSecurityPolicy-2014-10"],
              "Protocol-SSLv2"=>["false"],
              "Protocol-TLSv1"=>["true"],
-             "Protocol-SSLv3"=>["true"],
+             "Protocol-SSLv3"=>["false"],
              "Protocol-TLSv1.1"=>["true"],
              "Protocol-TLSv1.2"=>["true"],
              "Server-Defined-Cipher-Order"=>["true"],
@@ -486,7 +487,8 @@ end
      :scheme=>"internet-facing",
      :dns_name=>"my-load-balancer-1-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
-      {:access_log=>{:enabled=>false},
+      {:additional_attributes=>[],
+       :access_log=>{:enabled=>false},
        :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>false},
        :connection_draining=>{:enabled=>false, :timeout=>300}},
@@ -508,13 +510,13 @@ end
         :instance_port=>80,
         :server_certificate=>"test3",
         :policies=>
-         [{:name=>"ELBSecurityPolicy-2014-01",
+         [{:name=>"ELBSecurityPolicy-2014-10",
            :type=>"SSLNegotiationPolicyType",
            :attributes=>
-            {"Reference-Security-Policy"=>["ELBSecurityPolicy-2014-01"],
+            {"Reference-Security-Policy"=>["ELBSecurityPolicy-2014-10"],
              "Protocol-SSLv2"=>["false"],
              "Protocol-TLSv1"=>["true"],
-             "Protocol-SSLv3"=>["true"],
+             "Protocol-SSLv3"=>["false"],
              "Protocol-TLSv1.1"=>["true"],
              "Protocol-TLSv1.2"=>["true"],
              "Server-Defined-Cipher-Order"=>["true"],
@@ -616,7 +618,8 @@ end
      :dns_name=>
       "internal-my-load-balancer-2-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
-      {:access_log=>{:enabled=>false},
+      {:additional_attributes=>[],
+       :access_log=>{:enabled=>false},
        :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>false},
        :connection_draining=>{:enabled=>false, :timeout=>300}},

@@ -376,7 +376,8 @@ end
      :scheme=>"internet-facing",
      :dns_name=>"my-load-balancer-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
-      {:access_log=>{:enabled=>false},
+      {:additional_attributes=>[],
+       :access_log=>{:enabled=>false},
        :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>false},
        :connection_draining=>{:enabled=>false, :timeout=>300}},
@@ -508,7 +509,8 @@ end
      :scheme=>"internet-facing",
      :dns_name=>"my-load-balancer-1-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
-      {:access_log=>{:enabled=>false},
+      {:additional_attributes=>[],
+       :access_log=>{:enabled=>false},
        :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>false},
        :connection_draining=>{:enabled=>false, :timeout=>300}},
@@ -648,7 +650,8 @@ end
      :dns_name=>
       "internal-my-load-balancer-2-NNNNNNNNNN.us-west-1.elb.amazonaws.com",
      :attributes=>
-      {:access_log=>{:enabled=>false},
+      {:additional_attributes=>[],
+       :access_log=>{:enabled=>false},
        :connection_settings=>{:idle_timeout=>60},
        :cross_zone_load_balancing=>{:enabled=>false},
        :connection_draining=>{:enabled=>false, :timeout=>300}},
