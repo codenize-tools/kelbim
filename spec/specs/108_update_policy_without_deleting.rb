@@ -275,7 +275,7 @@ end
            :attributes=>
             {"Protocol-SSLv2"=>["false"],
              "Protocol-TLSv1"=>["true"],
-             "Protocol-SSLv3"=>["false"],
+             "Protocol-SSLv3"=>["true"],
              "Protocol-TLSv1.1"=>["false"],
              "Protocol-TLSv1.2"=>["false"],
              "Server-Defined-Cipher-Order"=>["false"],
@@ -402,7 +402,7 @@ end
            :attributes=>
             {"Protocol-SSLv2"=>["false"],
              "Protocol-TLSv1"=>["true"],
-             "Protocol-SSLv3"=>["false"],
+             "Protocol-SSLv3"=>["true"],
              "Protocol-TLSv1.1"=>["false"],
              "Protocol-TLSv1.2"=>["false"],
              "Server-Defined-Cipher-Order"=>["false"],
