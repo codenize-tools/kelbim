@@ -2,14 +2,22 @@
 layout: default
 ---
 
-[![Gem Version](https://badge.fury.io/rb/piculet.svg)](http://badge.fury.io/rb/piculet)
-[![Build Status](https://travis-ci.org/winebarrel/piculet.svg?branch=master)](https://travis-ci.org/winebarrel/piculet)
+[![Gem Version](https://badge.fury.io/rb/kelbim.svg)](http://badge.fury.io/rb/kelbim)
+[![Build Status](https://travis-ci.org/winebarrel/kelbim.svg?branch=master)](https://travis-ci.org/winebarrel/kelbim)
+
+**Notice**
+
+It does not yet support the following load balancer policies:
+
+* ProxyProtocolPolicyType
+* BackendServerAuthenticationPolicyType
+* PublicKeyPolicyType
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'piculet'
+    gem 'kelbim'
 
 And then execute:
 
@@ -17,7 +25,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install piculet
+    $ gem install kelbim
 
 ## Usage
 
@@ -25,18 +33,16 @@ Or install it yourself as:
 export AWS_ACCESS_KEY_ID='...'
 export AWS_SECRET_ACCESS_KEY='...'
 export AWS_REGION='ap-northeast-1'
-#export AWS_OWNER_ID='123456789012'
-# Note: If you do not set the OWNER_ID,
-#       Piculet get the OWNER_ID from GetUser(IAM) or CreateSecurityGroup(EC2)
-piculet -e -o Groupfile  # export EC2 SecurityGroup
-vi Groupfile
-piculet -a --dry-run
-piculet -a               # apply `Groupfile` to EC2 SecurityGroup
+kelbim -e -o ELBfile  # export ELB
+vi ELBFile
+kelbim -a --dry-run
+kelbim -a             # apply `ELBfile` to ELB
 {% endhighlight %}
 
 ## Help
+
 {% highlight sh %}
-Usage: piculet [options]
+Usage: kelbim [options]
     -p, --profile PROFILE_NAME
         --credentials-path PATH
     -k, --access-key ACCESS_KEY
@@ -44,126 +50,124 @@ Usage: piculet [options]
     -r, --region REGION
     -a, --apply
     -f, --file FILE
-    -n, --names SG_LIST
-    -x, --exclude SG_LIST
-        --ec2s VPC_IDS
+    -n, --elb-names NAMES
         --dry-run
+        --ec2s VPC_IDS
+        --without-deleting-policy
     -e, --export
     -o, --output FILE
         --split
+        --split-more
+    -t, --test
+        --show-load-balancers
+        --show-policies
         --no-color
         --debug
 {% endhighlight %}
 
-## Groupfile example
+## ELBfile example
 
 {% highlight ruby %}
-require 'other/groupfile'
+require 'other/elbfile'
 
+# EC2 Classic
 ec2 do
-  security_group "default" do
-    description "default group for EC2 Classic"
-
-    tags(
-      "key1" => "value1",
-      "key2" => "value2"
+  load_balancer "my-load-balancer" do
+    instances(
+      "cthulhu",
+      "nyar",
     )
 
-    ingress do
-      permission :tcp, 0..65535 do
-        groups(
-          "default"
-        )
-      end
-      permission :udp, 0..65535 do
-        groups(
-          "default"
-        )
-      end
-      permission :icmp, -1..-1 do
-        groups(
-          "default"
-        )
-      end
-      permission :tcp, 22..22 do
-        ip_ranges(
-          "0.0.0.0/0"
-        )
-      end
-      permission :udp, 60000..61000 do
-        ip_ranges(
-          "0.0.0.0/0",
-        )
-      end
+    listeners do
+      listener [:http, 80] => [:http, 80]
     end
+
+    health_check do
+      target "HTTP:80/index.html"
+      timeout 5
+      interval 30
+      healthy_threshold 10
+      unhealthy_threshold 2
+    end
+
+    attributes do
+      connection_settings :idle_timeout=>60
+      access_log :enabled => false
+      cross_zone_load_balancing :enabled => false
+      connection_draining :enabled => false, :timeout => 300
+    end
+
+    availability_zones(
+      "ap-northeast-1a",
+      "ap-northeast-1b"
+    )
   end
 end
 
-ec2 "vpc-XXXXXXXX" do
-  security_group "default" do
-    description "default VPC security group"
-
-    tags(
-      "key1" => "value1",
-      "key2" => "value2"
+# EC2 VPC
+ec2 "vpc-XXXXXXXXX" do
+  load_balancer "my-load-balancer", :internal => true do
+    instances(
+      "nyar",
+      "yog"
     )
 
-    ingress do
-      permission :tcp, 22..22 do
-        ip_ranges(
-          "0.0.0.0/0",
-        )
-      end
-      permission :tcp, 80..80 do
-        ip_ranges(
-          "0.0.0.0/0"
-        )
-      end
-      permission :udp, 60000..61000 do
-        ip_ranges(
-          "0.0.0.0/0"
-        )
-      end
-      # ESP (IP Protocol number: 50)
-      permission :"50" do
-        ip_ranges(
-          "0.0.0.0/0"
-        )
-      end
-      permission :any do
-        groups(
-          "any_other_group",
-          "default"
-        )
+    listeners do
+      listener [:tcp, 80] => [:tcp, 80]
+      listener [:https, 443] => [:http, 80] do
+        app_cookie_stickiness "CookieName"=>"20"
+        ssl_negotiation ["Protocol-TLSv1", "Protocol-SSLv3", "AES256-SHA", ...]
+        server_certificate "my-cert"
       end
     end
 
-    egress do
-      permission :any do
-        ip_ranges(
-          "0.0.0.0/0"
-        )
-      end
+    health_check do
+      target "TCP:80"
+      timeout 5
+      interval 30
+      healthy_threshold 10
+      unhealthy_threshold 2
     end
-  end
 
-  security_group "any_other_group" do
-    description "any_other_group"
+    attributes do
+      access_log :enabled => true, :s3_bucket_name => "any_bucket", :s3_bucket_prefix => nil, :emit_interval => 60
+      cross_zone_load_balancing :enabled => true
+      connection_draining :enabled => false, :timeout => 300
+    end
 
-    tags(
-      "key1" => "value1",
-      "key2" => "value2"
+    subnets(
+      "subnet-XXXXXXXX"
     )
 
-    egress do
-      permission :any do
-        ip_ranges(
-          "0.0.0.0/0"
-        )
-      end
-    end
+    security_groups(
+      "default"
+    )
   end
 end
+{% endhighlight %}
+
+## Test
+
+{% highlight ruby %}
+ec2 "vpc-XXXXXXXXX" do
+  load_balancer "my-load-balancer" do
+    spec do
+      url = URI.parse('http://www.example.com/')
+      res = Net::HTTP.start(url.host, url.port) {|http| http.get(url.path) }
+      expect(res).to be_a(Net::HTTPOK)
+    end
+    ...
+{% endhighlight %}
+
+&nbsp;
+
+{% highlight sh %}
+shell> kelbim -t
+Test `ELBfile`
+...
+
+Finished in 3.16 seconds
+3 examples, 0 failures
 {% endhighlight %}
 
 ## Similar tools
