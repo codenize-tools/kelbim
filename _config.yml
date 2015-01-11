@@ -1,0 +1,12 @@
+# Site settings
+title: Kelbim
+email: sgwr_dts@yahoo.co.jp
+description: "Kelbim is a tool to manage ELB. It defines the state of ELB using DSL, and updates ELB according to DSL."
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://kelbim.codenize.tools/"
+github_url: "https://github.com/winebarrel/kelbim"
+twitter_username: sgwr_dts
+github_username:  winebarrel
+
+# Build settings
+markdown: kramdown
