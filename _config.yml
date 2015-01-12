@@ -7,6 +7,8 @@ url: "http://kelbim.codenize.tools/"
 github_url: "https://github.com/winebarrel/kelbim"
 twitter_username: sgwr_dts
 github_username:  winebarrel
+original_background_image_url: "https://www.flickr.com/photos/small_realm/12056349116/in/photolist-4aYS75-5jUBP8-q4QGWj-6yYyJh-o8oDve-odC8rD-btqw4Q-6j1kBU-87p898-9xKPtb-594Zuw-pacusq-bbeYg-jnnWyd-cwtkD-6Bmfr7-7DUns3-dzdffQ-dGoAU4-dz7L4i-dz7LTa-dG1DDJ-hynCvX-dz7LkX-dzdJuf-dzdJRm-dzdjCj-dzdfDA-dzdJzC-dz8jWK-dz7LHH-dz8mwX-dz8g74-dzdgnd-dzdgz5-dzdK29-dz8ktz-dzdQdu-dz8exz-dzdQoA-dz8eSe-dzdkho-dzdgPL-dz7MS4-dzdPPL-dzdHkU-dz8eYr-dzdmbN-dz8kac-dzdmnA"
+background_image_licence: "images/background.license"
 
 # Build settings
 markdown: kramdown
