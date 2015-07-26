@@ -39,7 +39,7 @@ end
     expect(export_elb).to eq(
 {nil=>
   {"my-load-balancer"=>
-    {:instances=>["i-cd1c8a91", "i-e01086bc", "i-e11086bd", "i-e21086be"],
+    {:instances=>["i-8281bc40", "i-8381bc41", "i-8481bc46", "i-8581bc47"],
      :listeners=>
       [{:protocol=>:http,
         :port=>80,
