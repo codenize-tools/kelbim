@@ -1,4 +1,4 @@
-require 'aws-sdk'
+require 'aws-sdk-v1'
 require 'kelbim/dsl'
 require 'kelbim/exporter'
 require 'kelbim/ext/ec2-ext'
