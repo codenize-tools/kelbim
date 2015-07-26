@@ -224,7 +224,7 @@ end
      :availability_zones=>["us-west-1a", "us-west-1b", "us-west-1c"]}},
  "vpc-c1cbc2a3"=>
   {"my-load-balancer-1"=>
-    {:instances=>["i-1e68fe42", "i-5f3c7000"],
+    {:instances=>["i-d8662b13", "i-df662b14"],
      :listeners=>
       [{:protocol=>:tcp,
         :port=>8080,

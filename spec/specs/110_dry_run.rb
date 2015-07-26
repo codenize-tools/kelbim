@@ -233,7 +233,7 @@ end
     expect(exported).to eq(
 {nil=>
   {"my-load-balancer"=>
-    {:instances=>["i-cd1c8a91", "i-e11086bd", "i-e21086be"],
+    {:instances=>["i-8381bc41", "i-8481bc46", "i-8581bc47"],
      :listeners=>
       [{:protocol=>:http,
         :port=>80,
