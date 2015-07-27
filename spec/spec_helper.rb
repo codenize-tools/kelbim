@@ -1,11 +1,20 @@
-require 'aws-sdk'
+require 'aws-sdk-v1'
 require 'fileutils'
+
+TEST_INTERVAL = ENV['TEST_INTERVAL'].to_i
+RETRY_TIMES = 10
 
 AWS.config({
   :access_key_id => (ENV['TEST_AWS_ACCESS_KEY_ID'] || 'scott'),
   :secret_access_key => (ENV['TEST_AWS_SECRET_ACCESS_KEY'] || 'tiger'),
   :region => ENV['TEST_AWS_REGION'],
 })
+
+RSpec.configure do |config|
+  config.before(:each) do
+    sleep TEST_INTERVAL
+  end
+end
 
 def elbfile(options = {})
   updated = false
@@ -34,7 +43,15 @@ def elbfile(options = {})
     when :show_policies
       updated = client.policies
     else
-      updated = client.apply(tempfile)
+      (1..RETRY_TIMES).each do |i|
+        begin
+          updated = client.apply(tempfile)
+          break
+        rescue AWS::ELB::Errors::Throttling, AWS::ELB::Errors::InvalidConfigurationRequest => e
+          sleep TEST_INTERVAL * i
+          raise e unless i < RETRY_TIMES
+        end
+      end
     end
   ensure
     FileUtils.rm_f(tempfile)

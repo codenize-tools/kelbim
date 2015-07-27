@@ -18,3 +18,4 @@ tmp
 test.rb
 ELBFile
 *.bak
+/_site/
