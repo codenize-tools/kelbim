@@ -23,6 +23,7 @@ module Kelbim
     private
     def require(file)
       balancerfile = File.expand_path(File.join(File.dirname(@path), file))
+      balancerfile = (file =~ %r|\A/|) ? file : File.expand_path(File.join(File.dirname(@path), file))
 
       if File.exist?(balancerfile)
         instance_eval(File.read(balancerfile))
