@@ -27,8 +27,9 @@ module Kelbim
             def update(dsl)
               log(:info, 'Update Listener', :green, log_id)
 
-              compare_server_certificate(dsl) do
-                log(:info, "  set server_certificate=#{dsl.server_certificate}", :green)
+              compare_server_certificate(dsl) do |old_data, new_data|
+                log(:info, "  server_certificate:", :green)
+                log(:info, Kelbim::Utils.diff(old_data, new_data, :color => @options[:color], :indent => '    '), false)
 
                 unless @options.dry_run
                   ss = @options.iam.server_certificates[dsl.server_certificate]
@@ -43,9 +44,11 @@ module Kelbim
               end
             end
 
-            def policies=(policy_list)
+            def update_policies(policy_list, old_policy_list)
+              old_data = old_policy_list.map {|i| i.name }.sort
+              new_data = policy_list.map {|i| i.name }.sort
               log(:info, 'Update Listener Policies', :green, log_id)
-              log(:info, '  set policies=' + policy_list.map {|i| i.name }.join(', '), :green)
+              log(:info, Kelbim::Utils.diff(old_data, new_data, :color => @options[:color], :indent => '    '), false)
 
               unless @options.dry_run
                 @options.elb.client.set_load_balancer_policies_of_listener({
@@ -94,7 +97,7 @@ module Kelbim
               aws_server_certificate = @listener.server_certificate
               aws_server_certificate = aws_server_certificate.name if aws_server_certificate
               same = (aws_server_certificate == dsl.server_certificate)
-              yield if !same && block_given?
+              yield(aws_server_certificate, dsl.server_certificate) if !same && block_given?
               return same
             end
           end # Listener

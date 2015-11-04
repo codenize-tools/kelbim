@@ -243,7 +243,7 @@ module Kelbim
       end
 
       if orig_policy_names.sort != new_policies.map {|i| i.name }.sort
-        listener.policies = new_policies
+        listener.update_policies(new_policies, old_policies)
       end
 
       if not old_policies.empty? and not @options.without_deleting_policy

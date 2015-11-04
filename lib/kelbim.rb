@@ -1,15 +1,15 @@
-
 require 'forwardable'
 require 'logger'
 require 'net/http'
 require 'ostruct'
-
+require 'pp'
 require 'set'
 require 'singleton'
 require 'socket'
 require 'timeout'
 
 require 'aws-sdk-v1'
+require 'diffy'
 require 'rspec'
 require 'rspec/core/formatters/progress_formatter'
 require 'term/ansicolor'
