@@ -4,7 +4,7 @@ Kelbim is a tool to manage ELB.
 
 It defines the state of ELB using DSL, and updates ELB according to DSL.
 
-[![Gem Version](https://badge.fury.io/rb/kelbim.png)](http://badge.fury.io/rb/kelbim)
+[![Gem Version](https://badge.fury.io/rb/kelbim.svg)](https://badge.fury.io/rb/kelbim)
 [![Build Status](https://travis-ci.org/winebarrel/kelbim.svg?branch=master)](https://travis-ci.org/winebarrel/kelbim)
 
 **Notice**
