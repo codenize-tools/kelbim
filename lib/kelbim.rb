@@ -22,11 +22,11 @@ require 'kelbim/ext/elb-load-balancer-ext'
 
 require 'kelbim/logger'
 require 'kelbim/utils'
+require 'kelbim/dsl/checker'
 
 require 'kelbim/client'
 require 'kelbim/dsl'
 require 'kelbim/dsl/attributes'
-require 'kelbim/dsl/checker'
 require 'kelbim/dsl/converter'
 require 'kelbim/dsl/ec2'
 require 'kelbim/dsl/health-check'
