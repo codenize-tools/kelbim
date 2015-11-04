@@ -26,9 +26,9 @@ module Kelbim
       balancerfile = (file =~ %r|\A/|) ? file : File.expand_path(File.join(File.dirname(@path), file))
 
       if File.exist?(balancerfile)
-        instance_eval(File.read(balancerfile))
+        instance_eval(File.read(balancerfile), balancerfile)
       elsif File.exist?(balancerfile + '.rb')
-        instance_eval(File.read(balancerfile + '.rb'))
+        instance_eval(File.read(balancerfile + '.rb'), balancerfile + '.rb')
       else
         Kernel.require(file)
       end
