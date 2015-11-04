@@ -1,9 +1,3 @@
-require 'ostruct'
-require 'kelbim/wrapper/policy'
-require 'kelbim/policy-types'
-require 'kelbim/logger'
-require 'uuid'
-
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection

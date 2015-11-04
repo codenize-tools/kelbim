@@ -1,7 +1,3 @@
-require 'ostruct'
-require 'kelbim/dsl/checker'
-require 'kelbim/dsl/listener'
-
 module Kelbim
   class DSL
     class EC2

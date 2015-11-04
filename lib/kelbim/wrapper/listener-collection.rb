@@ -1,8 +1,3 @@
-require 'ostruct'
-require 'kelbim/wrapper/listener'
-require 'kelbim/wrapper/policy-collection'
-require 'kelbim/logger'
-
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection

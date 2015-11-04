@@ -1,7 +1,3 @@
-require 'ostruct'
-require 'kelbim/dsl/converter'
-require 'kelbim/dsl/ec2'
-
 module Kelbim
   class DSL
     class << self

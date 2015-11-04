@@ -1,7 +1,3 @@
-require 'forwardable'
-require 'kelbim/policy-types'
-require 'kelbim/logger'
-
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection

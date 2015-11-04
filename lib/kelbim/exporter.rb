@@ -1,7 +1,3 @@
-require 'kelbim/ext/elb-load-balancer-ext'
-require 'kelbim/ext/elb-listener-ext'
-require 'kelbim/utils'
-
 module Kelbim
   class Exporter
     include Kelbim::Utils::Helper

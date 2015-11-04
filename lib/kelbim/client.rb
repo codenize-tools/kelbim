@@ -1,14 +1,3 @@
-require 'aws-sdk-v1'
-require 'kelbim/dsl'
-require 'kelbim/exporter'
-require 'kelbim/ext/ec2-ext'
-require 'kelbim/ext/elb-load-balancer-ext'
-require 'kelbim/policy-types'
-require 'kelbim/tester'
-require 'kelbim/wrapper/elb-wrapper'
-require 'kelbim/logger'
-require 'kelbim/utils'
-
 module Kelbim
   class Client
     include Logger::ClientHelper

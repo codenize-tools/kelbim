@@ -1,7 +1,3 @@
-require 'ostruct'
-require 'set'
-require 'kelbim/dsl/load-balancer'
-
 module Kelbim
   class DSL
     class EC2

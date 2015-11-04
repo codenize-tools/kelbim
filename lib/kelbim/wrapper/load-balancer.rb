@@ -1,7 +1,3 @@
-require 'forwardable'
-require 'kelbim/wrapper/listener-collection'
-require 'kelbim/logger'
-
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection

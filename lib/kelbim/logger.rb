@@ -1,7 +1,3 @@
-require 'logger'
-require 'singleton'
-require 'kelbim/ext/string-ext'
-
 module Kelbim
   class Logger < ::Logger
     include Singleton

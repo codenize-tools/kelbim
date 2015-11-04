@@ -1,6 +1,3 @@
-require 'rspec'
-require 'rspec/core/formatters/progress_formatter'
-
 module Kelbim
   class RSpecFormatter < RSpec::Core::Formatters::ProgressFormatter
     def dump_failure_info(example)

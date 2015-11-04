@@ -1,7 +1,3 @@
-require 'ostruct'
-require 'kelbim/dsl/checker'
-require 'kelbim/policy-types'
-
 module Kelbim
   class DSL
     class EC2

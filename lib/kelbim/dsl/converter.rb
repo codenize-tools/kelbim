@@ -1,5 +1,3 @@
-require 'kelbim/policy-types'
-
 module Kelbim
   class DSL
     class Converter

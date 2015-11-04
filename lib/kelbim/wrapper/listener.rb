@@ -1,8 +1,3 @@
-require 'forwardable'
-require 'kelbim/ext/elb-listener-ext'
-require 'kelbim/wrapper/policy-collection'
-require 'kelbim/logger'
-
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection
