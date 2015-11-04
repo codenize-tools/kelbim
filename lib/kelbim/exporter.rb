@@ -23,7 +23,7 @@ module Kelbim
 
       ec2s = @options[:ec2s]
 
-      if ec2s or @options[:elb_names] or @options[:exclude_elb_names]
+      if ec2s or @options[:elb_name] or @options[:exclude_elb_name]
         lbs = lbs.select do |lb|
           (ec2s.nil? or ec2s.include?(lb.vpc_id || 'classic')) &&
           matched_elb?(lb.name)
