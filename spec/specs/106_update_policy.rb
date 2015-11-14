@@ -670,8 +670,7 @@ end
       my_load_balancer_1_policies = get_policy_names(elb, 'my-load-balancer-1')
       expect(my_load_balancer_1_policies).to eq([
         "vpc-c1cbc2a3-my-load-balancer-1-https-443-http-80-LBCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-        "vpc-c1cbc2a3-my-load-balancer-1-https-443-http-80-LBCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-        "vpc-c1cbc2a3-my-load-balancer-1-https-443-http-80-SSLNegotiationPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+        "vpc-c1cbc2a3-my-load-balancer-1-https-443-http-80-SSLNegotiationPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
       ])
 
       my_load_balancer_2_policies = get_policy_names(elb, 'my-load-balancer-2')

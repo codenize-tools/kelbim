@@ -682,9 +682,8 @@ end
         "vpc-cbcbc2a9-my-load-balancer-2-http-80-http-80-LBCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
         "vpc-cbcbc2a9-my-load-balancer-2-https-443-http-80-AppCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
         "vpc-cbcbc2a9-my-load-balancer-2-https-443-http-80-LBCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-        "vpc-cbcbc2a9-my-load-balancer-2-https-443-http-80-LBCookieStickinessPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
         "vpc-cbcbc2a9-my-load-balancer-2-https-443-http-80-SSLNegotiationPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-        "vpc-cbcbc2a9-my-load-balancer-2-https-443-http-80-SSLNegotiationPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+        "vpc-cbcbc2a9-my-load-balancer-2-https-443-http-80-SSLNegotiationPolicyType-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
       ])
     end
   end
