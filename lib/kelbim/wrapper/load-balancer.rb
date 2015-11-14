@@ -122,7 +122,7 @@ module Kelbim
               sg_names = @options.security_group_names[self.vpc_id] || {}
               old_data = aws_sg_ids.map {|i| sg_names.fetch(i, i) }.sort
               new_data = dsl_sg_ids.map {|i| sg_names.fetch(i, i) }.sort
-              log(:info, '  security groups:')
+              log(:info, '  security groups:', :green)
               log(:info, Kelbim::Utils.diff(old_data, new_data, :color => @options[:color], :indent => '    '), false)
 
               unless @options.dry_run
