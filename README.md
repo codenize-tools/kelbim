@@ -148,6 +148,33 @@ ec2 "vpc-XXXXXXXXX" do
 end
 ```
 
+## Use template
+
+```ruby
+template "listeners" do
+  listeners do
+    listener [:tcp, 80] => [:tcp, context.backend_port]
+    listener [:https, 443] => [:http, context.backend_port] do
+      app_cookie_stickiness "CookieName"=>"20"
+      ssl_negotiation ["Protocol-TLSv1", "Protocol-SSLv3", "AES256-SHA", ...]
+      server_certificate "my-cert"
+    end
+  end
+end
+
+ec2 "vpc-XXXXXXXXX" do
+  load_balancer "my-load-balancer", :internal => true do
+    instances(
+      "nyar",
+      "yog"
+    )
+
+    include_template "listeners", backend_port: 80
+    ...
+  end
+end
+```
+
 ## Test
 
 ```ruby
