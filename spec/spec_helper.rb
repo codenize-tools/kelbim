@@ -24,6 +24,11 @@ def elbfile(options = {})
     open(tempfile, 'wb') {|f| f.puts(yield) }
     options = {:logger => Logger.new('/dev/null')}.merge(options)
 
+    if ENV['DEBUG'] == '1'
+      options[:debug] = true
+      options[:logger] = Kelbim::Logger.instance
+    end
+
     if options[:debug]
       AWS.config({
         :http_wire_trace => true,
