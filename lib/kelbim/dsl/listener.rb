@@ -5,9 +5,11 @@ module Kelbim
         class Listeners
           class Listener
             include Checker
+            include Kelbim::TemplateHelper
 
-            def initialize(load_balancer, protocol_prots, &block)
-              @error_identifier = "LoadBalancer `#{load_balancer}`: #{protocol_prots}"
+            def initialize(context, load_balancer, protocol_ports, &block)
+              @error_identifier = "LoadBalancer `#{load_balancer}`: #{protocol_ports}"
+              @context = context.merge(:protocol_ports => protocol_ports)
 
               @result = OpenStruct.new({
                 :policies => []
@@ -28,7 +30,7 @@ module Kelbim
               expected_type(value, Hash)
 
               unless value.kind_of?(Hash)
-                raise "LoadBalancer `#{@load_balancer}`: #{@protocol_prots}: Invalid policies: #{value}"
+                raise "LoadBalancer `#{@load_balancer}`: #{@protocol_ports}: Invalid policies: #{value}"
               end
 
               value = value.map do |policy, name_or_attrs|

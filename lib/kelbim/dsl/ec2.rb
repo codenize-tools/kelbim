@@ -1,10 +1,13 @@
 module Kelbim
   class DSL
     class EC2
+      include Kelbim::TemplateHelper
+
       attr_reader :result
 
-      def initialize(vpc, load_balancers, &block)
+      def initialize(context, vpc, load_balancers, &block)
         @error_identifier = "EC2 `#{vpc || :classic}`"
+        @context = context.merge(:vpc => vpc)
 
         @result = OpenStruct.new({
           :vpc            => vpc,
@@ -25,7 +28,7 @@ module Kelbim
           raise "LoadBalancer `#{name}`: Invalid option keys: #{invalid_keys}"
         end
 
-        @result.load_balancers << LoadBalancer.new(name, @result.vpc, opts[:internal], &block).result
+        @result.load_balancers << LoadBalancer.new(@context, name, @result.vpc, opts[:internal], &block).result
         @names << name
       end
     end # EC2

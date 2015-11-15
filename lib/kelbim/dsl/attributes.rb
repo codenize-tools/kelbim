@@ -4,9 +4,11 @@ module Kelbim
       class LoadBalancer
         class Attributes
           include Checker
+          include Kelbim::TemplateHelper
 
-          def initialize(load_balancer, &block)
+          def initialize(context, load_balancer, &block)
             @error_identifier = "LoadBalancer `#{load_balancer}`"
+            @context = context.dup
             @result = {}
             instance_eval(&block)
           end

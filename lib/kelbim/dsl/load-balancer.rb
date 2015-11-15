@@ -3,11 +3,13 @@ module Kelbim
     class EC2
       class LoadBalancer
         include Checker
+        include Kelbim::TemplateHelper
 
-        def initialize(name, vpc, internal, &block)
+        def initialize(context, name, vpc, internal, &block)
           @name = name
           @vpc = vpc
           @error_identifier = "LoadBalancer `#{name}`"
+          @context = context.merge(:load_balancer_name => name)
 
           @result = OpenStruct.new({
             :name      => name,
@@ -51,17 +53,17 @@ module Kelbim
 
         def listeners(&block)
           call_once(:listeners)
-          @result.listeners = Listeners.new(@name, &block).result
+          @result.listeners = Listeners.new(@context, @name, &block).result
         end
 
         def health_check(&block)
           call_once(:health_check)
-          @result.health_check = HealthCheck.new(@name, &block).result
+          @result.health_check = HealthCheck.new(@context, @name, &block).result
         end
 
         def attributes(&block)
           call_once(:attributes)
-          @result.attributes = Attributes.new(@name, &block).result
+          @result.attributes = Attributes.new(@context, @name, &block).result
         end
 
         def subnets(*values)

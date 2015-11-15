@@ -4,9 +4,11 @@ module Kelbim
       class LoadBalancer
         class Listeners
           include Checker
+          include Kelbim::TemplateHelper
 
-          def initialize(load_balancer, &block)
+          def initialize(context, load_balancer, &block)
             @error_identifier = "LoadBalancer `#{load_balancer}`"
+            @context = context.dup
             @result = {}
             instance_eval(&block)
           end
@@ -43,7 +45,7 @@ module Kelbim
               expected_type(port, Integer)
             end
 
-            @result[protocol_ports] = Listener.new(@load_balancer, protocol_ports, &block).result
+            @result[protocol_ports] = Listener.new(@context, @load_balancer, protocol_ports, &block).result
           end
         end # Listeners
       end # LoadBalancer

@@ -1,5 +1,7 @@
 module Kelbim
   class DSL
+    include Kelbim::TemplateHelper
+
     class << self
       def define(source, path)
         self.new(path) do
@@ -17,6 +19,12 @@ module Kelbim
     def initialize(path, &block)
       @path = path
       @result = OpenStruct.new(:ec2s => {})
+
+      @context = Hashie::Mash.new(
+        :path => path,
+        :templates => {}
+      )
+
       instance_eval(&block)
     end
 
@@ -34,11 +42,15 @@ module Kelbim
       end
     end
 
+    def template(name, &block)
+      @context.templates[name.to_s] = block
+    end
+
     def ec2(vpc = nil, &block)
       if (ec2_result = @result.ec2s[vpc])
-        @result.ec2s[vpc] = EC2.new(vpc, ec2_result.load_balancers, &block).result
+        @result.ec2s[vpc] = EC2.new(@context, vpc, ec2_result.load_balancers, &block).result
       else
-        @result.ec2s[vpc] = EC2.new(vpc, [], &block).result
+        @result.ec2s[vpc] = EC2.new(@context, vpc, [], &block).result
       end
     end
   end # DSL
