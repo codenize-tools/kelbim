@@ -25,6 +25,11 @@ module Kelbim
               @result.server_certificate = value
             end
 
+            def ssl_certificate_id(value)
+              call_once(:ssl_certificate_id)
+              @result.ssl_certificate_id = value
+            end
+
             def policies(value)
               call_once(:policies)
               expected_type(value, Hash)
