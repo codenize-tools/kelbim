@@ -68,6 +68,7 @@ module Kelbim
         :instance_port      => listener.instance_port,
         :server_certificate => listener.server_certificate,
         :policies           => listener.policies.map {|i| export_policy(i) },
+        :ssl_certificate_id => listener.ssl_certificate_id,
       }
     end
 

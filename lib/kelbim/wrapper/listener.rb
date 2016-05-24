@@ -9,7 +9,7 @@ module Kelbim
 
             def_delegators(
               :@listener,
-              :protocol, :port, :instance_protocol, :instance_port, :load_balancer)
+              :protocol, :port, :instance_protocol, :instance_port, :load_balancer, :ssl_certificate_id)
 
             def initialize(listener, options)
               @listener = listener
@@ -21,7 +21,7 @@ module Kelbim
             end
 
             def eql?(dsl)
-              not has_difference_protocol_port?(dsl) and compare_server_certificate(dsl)
+              not has_difference_protocol_port?(dsl) and compare_server_certificate(dsl) and compare_ssl_certificate_id(dsl)
             end
 
             def update(dsl)
@@ -39,6 +39,16 @@ module Kelbim
                   end
 
                   @listener.server_certificate = ss
+                  @options.updated = true
+                end
+              end
+
+              compare_ssl_certificate_id(dsl) do |old_data, new_data|
+                log(:info, "  ssl_certificate_id:", :green)
+                log(:info, Kelbim::Utils.diff(old_data, new_data, :color => @options[:color], :indent => '    '), false)
+
+                unless @options.dry_run
+                  @listener.ssl_certificate_id = @dsl.ssl_certificate_id
                   @options.updated = true
                 end
               end
@@ -96,8 +106,27 @@ module Kelbim
             def compare_server_certificate(dsl)
               aws_server_certificate = @listener.server_certificate
               aws_server_certificate = aws_server_certificate.name if aws_server_certificate
+
+              # XXX:
+              if not aws_server_certificate.nil? and dsl.server_certificate.nil?
+                log(:warn, "It can not be server_certificate to nil", :yellow, log_id)
+                return true
+              end
+
               same = (aws_server_certificate == dsl.server_certificate)
               yield(aws_server_certificate, dsl.server_certificate) if !same && block_given?
+              return same
+            end
+
+            def compare_ssl_certificate_id(dsl)
+              # XXX:
+              if not @listener.ssl_certificate_id.nil? and dsl.ssl_certificate_id.nil?
+                log(:warn, "It can not be ssl_certificate_id to nil", :yellow, log_id)
+                return true
+              end
+
+              same = (@listener.ssl_certificate_id == dsl.ssl_certificate_id)
+              yield(@listener.ssl_certificate_id, dsl.ssl_certificate_id) if !same && block_given?
               return same
             end
           end # Listener
