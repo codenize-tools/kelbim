@@ -26,6 +26,7 @@ module Kelbim
                 :instance_port      => instance_port,
                 :server_certificate => listener.server_certificate,
                 :policies           => listener.policies,
+                :ssl_certificate_id => listener.ssl_certificate_id,
               })
             end
           end
