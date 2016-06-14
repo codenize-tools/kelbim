@@ -109,7 +109,6 @@ module Kelbim
 
               # XXX:
               if not aws_server_certificate.nil? and dsl.server_certificate.nil?
-                log(:warn, "It can not be server_certificate to nil", :yellow, log_id)
                 return true
               end
 
@@ -121,7 +120,6 @@ module Kelbim
             def compare_ssl_certificate_id(dsl)
               # XXX:
               if not @listener.ssl_certificate_id.nil? and dsl.ssl_certificate_id.nil?
-                log(:warn, "It can not be ssl_certificate_id to nil", :yellow, log_id)
                 return true
               end
 
