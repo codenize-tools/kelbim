@@ -113,6 +113,7 @@ ec2 "vpc-XXXXXXXXX" do
       "nyar",
       "yog"
     )
+    # or `any_instances`
 
     listeners do
       listener [:tcp, 80] => [:tcp, 80]

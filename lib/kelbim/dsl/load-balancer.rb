@@ -51,6 +51,11 @@ module Kelbim
           end
         end
 
+        def any_instances
+          call_once(:instances)
+          @result.any_instances = true
+        end
+
         def listeners(&block)
           call_once(:listeners)
           @result.listeners = Listeners.new(@context, @name, &block).result

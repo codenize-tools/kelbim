@@ -236,6 +236,8 @@ module Kelbim
         end
 
         def compare_instances(dsl)
+          return true if dsl.any_instances
+
           aws_instance_ids = @load_balancer.instances.map {|i| i.id }.sort
 
           dsl_instance_ids = dsl.instances.map {|i|
