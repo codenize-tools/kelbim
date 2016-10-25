@@ -24,6 +24,11 @@ def elbfile(options = {})
     open(tempfile, 'wb') {|f| f.puts(yield) }
     options = {:logger => Logger.new('/dev/null')}.merge(options)
 
+    if ENV['DEBUG'] == '1'
+      options[:debug] = true
+      options[:logger] = Kelbim::Logger.instance
+    end
+
     if options[:debug]
       AWS.config({
         :http_wire_trace => true,
@@ -119,5 +124,5 @@ def get_policy_names(elb, name)
   lb = elb.load_balancers[name]
   lb.policies.map {|policy|
     policy.name.sub!(/\w+-\w+-\w+-\w+-\w+\Z/, 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
-  }.sort_by {|i| i || '' }
+  }.sort_by {|i| i || '' }.uniq
 end

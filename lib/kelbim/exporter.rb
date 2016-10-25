@@ -1,8 +1,7 @@
-require 'kelbim/ext/elb-load-balancer-ext'
-require 'kelbim/ext/elb-listener-ext'
-
 module Kelbim
   class Exporter
+    include Kelbim::Utils::Helper
+
     class << self
       def export(elb, options = {})
         self.new(elb, options).export
@@ -19,12 +18,11 @@ module Kelbim
       lbs = @elb.load_balancers
 
       ec2s = @options[:ec2s]
-      elb_names = @options[:elb_names]
 
-      if ec2s or elb_names
+      if ec2s or @options[:elb_name] or @options[:exclude_elb_name]
         lbs = lbs.select do |lb|
           (ec2s.nil? or ec2s.include?(lb.vpc_id || 'classic')) &&
-          (elb_names.nil? or elb_names.include?(lb.name))
+          matched_elb?(lb.name)
         end
       end
 
@@ -70,6 +68,7 @@ module Kelbim
         :instance_port      => listener.instance_port,
         :server_certificate => listener.server_certificate,
         :policies           => listener.policies.map {|i| export_policy(i) },
+        :ssl_certificate_id => listener.ssl_certificate_id,
       }
     end
 

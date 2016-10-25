@@ -36,7 +36,8 @@ ARGV.options do |opt|
     opt.on('-r', '--region REGION')           {|v| region                            = v                    }
     opt.on('-a', '--apply')                   {    mode                              = :apply               }
     opt.on('-f', '--file FILE')               {|v| file                              = v                    }
-    opt.on('-n', '--elb-names NAMES', Array)  {|v| options[:elb_names]               = v                    }
+    opt.on('-n', '--elb-name REGEXP')         {|v| options[:elb_name]                =  Regexp.new(v)       }
+    opt.on('',   '--exclude-elb-name REGEXP') {|v| options[:exclude_elb_name]        =  Regexp.new(v)       }
     opt.on('',   '--dry-run')                 {    options[:dry_run]                 = true                 }
     opt.on('',   '--ec2s VPC_IDS', Array)     {|v| options[:ec2s]                    = v                    }
     opt.on('',   '--without-deleting-policy') {    options[:without_deleting_policy] = true                 }

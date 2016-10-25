@@ -1,5 +1,3 @@
-require 'kelbim/policy-types'
-
 module Kelbim
   class DSL
     class Converter
@@ -141,6 +139,7 @@ end
         instance_port = listener[:instance_port]
         policies = listener[:policies]
         server_certificate = listener[:server_certificate]
+        ssl_certificate_id = listener[:ssl_certificate_id]
 
         out = "listener [#{protocol}, #{port}] => [#{instance_protocol}, #{instance_port}]"
 
@@ -160,6 +159,10 @@ end
 
         if server_certificate
           out << "        server_certificate #{server_certificate.name.inspect}\n"
+        end
+
+        if ssl_certificate_id
+          out << "        ssl_certificate_id #{ssl_certificate_id.inspect}\n"
         end
 
         out << "      end"

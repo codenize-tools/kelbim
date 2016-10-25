@@ -1,9 +1,3 @@
-require 'rspec'
-require 'net/http'
-require 'socket'
-require 'timeout'
-require 'kelbim/logger'
-
 module Kelbim
   class Tester
     class << self

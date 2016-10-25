@@ -1,7 +1,3 @@
-require 'forwardable'
-require 'kelbim/policy-types'
-require 'kelbim/logger'
-
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection
@@ -38,8 +34,16 @@ module Kelbim
                   log(:info, 'Delete Policy', :red, "#{@listener.log_id} > #{self.name}")
 
                   unless @options.dry_run
-                    @policy.delete
-                    @options.updated = true
+                    begin
+                      @policy.delete
+                      @options.updated = true
+                    rescue AWS::ELB::Errors::InvalidConfigurationRequest => e
+                      if e.message =~ /You cannot delete policy/
+                        # nothing to do
+                      else
+                        raise e
+                      end
+                    end
                   end
                 end
               end # Policy

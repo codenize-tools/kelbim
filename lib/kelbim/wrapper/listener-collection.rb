@@ -1,8 +1,3 @@
-require 'ostruct'
-require 'kelbim/wrapper/listener'
-require 'kelbim/wrapper/policy-collection'
-require 'kelbim/logger'
-
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection
@@ -25,6 +20,10 @@ module Kelbim
                 lstnr.server_certificate = OpenStruct.new(:name => dsl.server_certificate)
               end
 
+              if dsl.ssl_certificate_id
+                lstnr.ssl_certificate_id = dsl.ssl_certificate_id
+              end
+
               return lstnr
             end
 
@@ -44,6 +43,10 @@ module Kelbim
                 end
 
                 lstnr_opts[:server_certificate] = ss.arn
+              end
+
+              if dsl.ssl_certificate_id
+                lstnr_opts[:ssl_certificate_id] = dsl.ssl_certificate_id
               end
 
               return lstnr_opts

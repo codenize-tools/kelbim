@@ -1,16 +1,7 @@
-require 'aws-sdk-v1'
-require 'kelbim/dsl'
-require 'kelbim/exporter'
-require 'kelbim/ext/ec2-ext'
-require 'kelbim/ext/elb-load-balancer-ext'
-require 'kelbim/policy-types'
-require 'kelbim/tester'
-require 'kelbim/wrapper/elb-wrapper'
-require 'kelbim/logger'
-
 module Kelbim
   class Client
     include Logger::ClientHelper
+    include Kelbim::Utils::Helper
 
     def initialize(options = {})
       @options = OpenStruct.new(options)
@@ -147,11 +138,7 @@ module Kelbim
 
       lb_list_dsl.each do |key, lb_dsl|
         name = key[0]
-
-        if @options.elb_names
-          next unless @options.elb_names.include?(name)
-        end
-
+        next unless matched_elb?(name)
         lb_aws = lb_list_aws[key]
 
         unless lb_aws
@@ -162,11 +149,7 @@ module Kelbim
 
       lb_list_dsl.each do |key, lb_dsl|
         name = key[0]
-
-        if @options.elb_names
-          next unless @options.elb_names.include?(name)
-        end
-
+        next unless matched_elb?(name)
         log(:info, "Comparing #{vpc || :classic} > #{name}", :intense_black)
 
         lb_aws = lb_list_aws.delete(key)
@@ -175,11 +158,7 @@ module Kelbim
 
       lb_list_aws.each do |key, lb_aws|
         name = key[0]
-
-        if @options.elb_names
-          next unless @options.elb_names.include?(name)
-        end
-
+        next unless matched_elb?(name)
         lb_aws.delete
       end
     end
@@ -264,7 +243,7 @@ module Kelbim
       end
 
       if orig_policy_names.sort != new_policies.map {|i| i.name }.sort
-        listener.policies = new_policies
+        listener.update_policies(new_policies, old_policies)
       end
 
       if not old_policies.empty? and not @options.without_deleting_policy

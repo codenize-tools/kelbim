@@ -1,7 +1,3 @@
-require 'forwardable'
-require 'kelbim/wrapper/listener-collection'
-require 'kelbim/logger'
-
 module Kelbim
   class ELBWrapper
     class LoadBalancerCollection
@@ -69,8 +65,9 @@ module Kelbim
             end
           end
 
-          compare_health_check(dsl) do
-            log(:info, '  set health_check=' + dsl.health_check.inspect, :green)
+          compare_health_check(dsl) do |old_data, new_data|
+            log(:info, '  health_check:', :green)
+            log(:info, Kelbim::Utils.diff(old_data, new_data, :color => @options[:color], :indent => '    '), false)
 
             unless @options.dry_run
               @load_balancer.configure_health_check(dsl.health_check)
@@ -78,8 +75,9 @@ module Kelbim
             end
           end
 
-          compare_attributes(dsl) do
-            log(:info, '  set attributes=' + dsl.attributes.inspect, :green)
+          compare_attributes(dsl) do |old_data, new_data|
+            log(:info, '  attributes:', :green)
+            log(:info, Kelbim::Utils.diff(old_data, new_data, :color => @options[:color], :indent => '    '), false)
 
             unless @options.dry_run
               @load_balancer.attributes = dsl.attributes
@@ -120,9 +118,12 @@ module Kelbim
               end
             end
 
-            compare_security_groups(dsl) do |dsl_sg_ids|
+            compare_security_groups(dsl) do |aws_sg_ids, dsl_sg_ids|
               sg_names = @options.security_group_names[self.vpc_id] || {}
-              log(:info, '  apply security groups=' + dsl_sg_ids.map {|i| sg_names.fetch(i, i) }.join(', '), :green)
+              old_data = aws_sg_ids.map {|i| sg_names.fetch(i, i) }.sort
+              new_data = dsl_sg_ids.map {|i| sg_names.fetch(i, i) }.sort
+              log(:info, '  security groups:', :green)
+              log(:info, Kelbim::Utils.diff(old_data, new_data, :color => @options[:color], :indent => '    '), false)
 
               unless @options.dry_run
                 @options.elb.client.apply_security_groups_to_load_balancer(
@@ -183,8 +184,10 @@ module Kelbim
         end
 
         def compare_health_check(dsl)
-          same = (@load_balancer.health_check.sort == dsl.health_check.sort)
-          yield if !same && block_given?
+          old_data = @load_balancer.health_check.sort
+          new_data = dsl.health_check.sort
+          same = (old_data == new_data)
+          yield(old_data, new_data) if !same && block_given?
           return same
         end
 
@@ -198,8 +201,10 @@ module Kelbim
             lb_attributes[key] = @load_balancer.attributes[key]
           end
 
-          same = (lb_attributes.sort == dsl.attributes.sort)
-          yield if !same && block_given?
+          old_data = lb_attributes.sort
+          new_data = dsl.attributes.sort
+          same = (old_data == new_data)
+          yield(lb_attributes, dsl.attributes) if !same && block_given?
           return same
         end
 
@@ -219,7 +224,7 @@ module Kelbim
           }.sort
 
           same = (aws_sg_ids == dsl_sg_ids)
-          yield(dsl_sg_ids) if !same && block_given?
+          yield(aws_sg_ids, dsl_sg_ids) if !same && block_given?
           return same
         end
 
@@ -231,6 +236,8 @@ module Kelbim
         end
 
         def compare_instances(dsl)
+          return true if dsl.any_instances
+
           aws_instance_ids = @load_balancer.instances.map {|i| i.id }.sort
 
           dsl_instance_ids = dsl.instances.map {|i|

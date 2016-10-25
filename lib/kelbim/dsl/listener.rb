@@ -1,7 +1,3 @@
-require 'ostruct'
-require 'kelbim/dsl/checker'
-require 'kelbim/policy-types'
-
 module Kelbim
   class DSL
     class EC2
@@ -9,9 +5,11 @@ module Kelbim
         class Listeners
           class Listener
             include Checker
+            include Kelbim::TemplateHelper
 
-            def initialize(load_balancer, protocol_prots, &block)
-              @error_identifier = "LoadBalancer `#{load_balancer}`: #{protocol_prots}"
+            def initialize(context, load_balancer, protocol_ports, &block)
+              @error_identifier = "LoadBalancer `#{load_balancer}`: #{protocol_ports}"
+              @context = context.merge(:protocol_ports => protocol_ports)
 
               @result = OpenStruct.new({
                 :policies => []
@@ -27,12 +25,17 @@ module Kelbim
               @result.server_certificate = value
             end
 
+            def ssl_certificate_id(value)
+              call_once(:ssl_certificate_id)
+              @result.ssl_certificate_id = value
+            end
+
             def policies(value)
               call_once(:policies)
               expected_type(value, Hash)
 
               unless value.kind_of?(Hash)
-                raise "LoadBalancer `#{@load_balancer}`: #{@protocol_prots}: Invalid policies: #{value}"
+                raise "LoadBalancer `#{@load_balancer}`: #{@protocol_ports}: Invalid policies: #{value}"
               end
 
               value = value.map do |policy, name_or_attrs|

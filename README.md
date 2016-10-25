@@ -4,7 +4,7 @@ Kelbim is a tool to manage ELB.
 
 It defines the state of ELB using DSL, and updates ELB according to DSL.
 
-[![Gem Version](https://badge.fury.io/rb/kelbim.png)](http://badge.fury.io/rb/kelbim)
+[![Gem Version](https://badge.fury.io/rb/kelbim.svg)](https://badge.fury.io/rb/kelbim)
 [![Build Status](https://travis-ci.org/winebarrel/kelbim.svg?branch=master)](https://travis-ci.org/winebarrel/kelbim)
 
 **Notice**
@@ -113,6 +113,7 @@ ec2 "vpc-XXXXXXXXX" do
       "nyar",
       "yog"
     )
+    # or `any_instances`
 
     listeners do
       listener [:tcp, 80] => [:tcp, 80]
@@ -144,6 +145,33 @@ ec2 "vpc-XXXXXXXXX" do
     security_groups(
       "default"
     )
+  end
+end
+```
+
+## Use template
+
+```ruby
+template "listeners" do
+  listeners do
+    listener [:tcp, 80] => [:tcp, context.backend_port]
+    listener [:https, 443] => [:http, context.backend_port] do
+      app_cookie_stickiness "CookieName"=>"20"
+      ssl_negotiation ["Protocol-TLSv1", "Protocol-SSLv3", "AES256-SHA", ...]
+      server_certificate "my-cert"
+    end
+  end
+end
+
+ec2 "vpc-XXXXXXXXX" do
+  load_balancer "my-load-balancer", :internal => true do
+    instances(
+      "nyar",
+      "yog"
+    )
+
+    include_template "listeners", backend_port: 80
+    ...
   end
 end
 ```

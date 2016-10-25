@@ -1,6 +1,3 @@
-require 'kelbim/wrapper/load-balancer-collection'
-require 'kelbim/ext/ec2-ext'
-
 module Kelbim
   class ELBWrapper
     def initialize(elb, options)

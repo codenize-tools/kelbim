@@ -1,3 +1,4 @@
+sudo: false
 language: ruby
 rvm:
 - 2.0.0
@@ -7,6 +8,6 @@ script:
 env:
   global:
   - TEST_AWS_REGION=us-west-1
-  - secure: "HS5unmXeingv7Kw577GRAInsORGc6Mw8G5FlUi55IxgxpzXNaUN1hPqNpNKB6HsO5A1dCi2Fvl+8ULYvKbFAfo8dGMTdGyl7MGaQ6L0DjdUzrgwAU448XdhBAhq8jzoZ2hMdjIviE4WHmAasBB8kaUE8+wNYALjCwmtea79PcFg="
-  - secure: "BqIJqpooZpqLKuiZnVYpNxC42E7yJFhYkkdE+MFlJCN7qjt24h2QHV/sG87nWTV8mL5WeDl0HSWdvw3KHqX73xyP0w0zKItMX1hW4TZIK6tzL2WF7r4EOP70yJLRaG6/bmzoeFSXywOpK9McyG/H6eeRnLnjffI7BNRBC9u5Naw="
+  - secure: "BW8qIC7075WzXfQQD21NcDyU7qKB55IyZq8b87lCdwXBVobY/eEgKXH0WziaQRrynHcTfpmJwLiJ2n/sOy9gCkVfsZZaoDJZe7bdrcpJZ/qLu3xf6qLQ+aer++KjVrZS1sMR2XwkM0dnGLxcPq/OfdU9n13xD8UnNfF4eWD/kRc="
+  - secure: "s5/h+hIGlhPND2NYUef7sJmZvZgAOBVBj+ysXNxw5KbxFZn35wjjq8cfp6IZ1OaN4eTzWWenLJ4bxLZ2uiUpRrOcvo0MGCg/SMhe3Hml4TJGsNKq6Fdm7HfPGrvEyAK3QjK4zHWFySPKBiX71W65ARyWhKHVtX7JtwlhL73cjzQ="
   - TEST_INTERVAL=3
