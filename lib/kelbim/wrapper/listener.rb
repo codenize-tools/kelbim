@@ -48,7 +48,7 @@ module Kelbim
                 log(:info, Kelbim::Utils.diff(old_data, new_data, :color => @options[:color], :indent => '    '), false)
 
                 unless @options.dry_run
-                  @listener.ssl_certificate_id = @dsl.ssl_certificate_id
+                  @listener.ssl_certificate_id = dsl.ssl_certificate_id
                   @options.updated = true
                 end
               end
