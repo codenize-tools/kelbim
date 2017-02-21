@@ -26,6 +26,10 @@ module Kelbim
                     @policy.name == dsl_name_or_attrs
                   else
                     aws_attrs = PolicyTypes.expand(@policy.type, @policy.attributes)
+                    aws_attrs.each do |name, value|
+                      value = value[0] if value.length < 2
+                      aws_attrs[name] = value
+                    end
                     aws_attrs.sort == dsl_name_or_attrs.sort
                   end
                 end
