@@ -162,7 +162,7 @@ begin
     end
 
     RSpec.configure do |config|
-      config.color_enabled = options[:color]
+      config.color = options[:color]
       config.output_stream = $stdout # formatterをセットする前に設定…
       config.formatter = Kelbim::RSpecFormatter
     end
