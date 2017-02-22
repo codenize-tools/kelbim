@@ -11,9 +11,13 @@ module Kelbim
 
     EXPANDERS = {
       :ssl_negotiation => proc {|attrs|
-        attrs.select {|name, value|
-          value[0] =~ /\Atrue\Z/i
-        }.map {|n, v| n }
+        if attrs.key?('Reference-Security-Policy')
+          { reference: attrs['Reference-Security-Policy'] }
+        else
+          attrs.select {|name, value|
+            value[0] =~ /\Atrue\Z/i
+          }.map {|n, v| n }
+        end
       },
       :app_cookie_stickiness => proc {|attrs| h = {}; attrs.map {|k, v| h[k] = [v].flatten[0] }; h },
       :lb_cookie_stickiness => proc {|attrs| h = {}; attrs.map {|k, v| h[k] = [v].flatten[0] }; h },
@@ -21,13 +25,20 @@ module Kelbim
 
     UNEXPANDERS = {
       :ssl_negotiation => proc {|attrs|
-        unexpanded = {}
+        if attrs.kind_of?(Hash)
+          if attrs.key?(:reference)
+            reference = attrs[:reference].is_a?(Array) ? attrs[:reference] : [attrs[:reference]]
+            { 'Reference-Security-Policy' => reference }
+          end
+        else
+          unexpanded = {}
 
-        attrs.each do |name|
-          unexpanded[name] = ['true']
+          attrs.each do |name|
+            unexpanded[name] = ['true']
+          end
+
+          unexpanded
         end
-
-        unexpanded
       },
       :app_cookie_stickiness => proc {|attrs| h = {}; attrs.map {|k, v| h[k] = [v].flatten }; h },
       :lb_cookie_stickiness => proc {|attrs| h = {}; attrs.map {|k, v| h[k] = [v].flatten }; h },
