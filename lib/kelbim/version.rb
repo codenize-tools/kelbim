@@ -1,5 +1,5 @@
 module Kelbim
-  VERSION = "0.3.1.beta3"
+  VERSION = "0.3.1"
 end
 
 Version = Kelbim::VERSION
